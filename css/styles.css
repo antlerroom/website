@@ -216,3 +216,105 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--color-gold);
   outline-offset: 2px;
 }
+
+/* =================================
+   7. HERO SECTION
+   ================================= */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--nav-height) var(--space-lg) var(--space-xl);
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.hero-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.2em;
+  margin-bottom: var(--space-lg);
+}
+
+.hero-title-antler {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(3rem, 10vw, 6rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+}
+
+.hero-title-room {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: var(--font-weight-regular);
+  font-size: clamp(3rem, 10vw, 6rem);
+  color: var(--color-gold);
+}
+
+.hero-subtitle {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
+}
+
+.hero-tagline {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-gold);
+  margin-bottom: var(--space-xl);
+}
+
+/* =================================
+   8. CTA BUTTON
+   ================================= */
+
+.cta-button {
+  display: inline-block;
+  background-color: var(--color-cta-bg);
+  color: var(--color-cta-text);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 1rem 2rem;
+  transition: opacity 0.2s ease;
+}
+
+.cta-button:hover {
+  opacity: 0.9;
+}
+
+.cta-button:focus {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* =================================
+   9. SECTIONS (Placeholder styles)
+   ================================= */
+
+.section {
+  min-height: 50vh;
+  padding: var(--space-2xl) 0;
+  scroll-margin-top: var(--nav-height);
+}
+
+.section h2 {
+  margin-bottom: var(--space-lg);
+}
