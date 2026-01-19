@@ -29,6 +29,8 @@ Plans:
 
 ### Phase 2: Content Sections & Form
 **Goal:** Build all content sections with copy and implement demo submission form
+**Status:** Planned
+**Plans:** 5 plans in 3 waves
 
 **Requirements:**
 - TRACK-01, TRACK-02, TRACK-03, TRACK-04, TRACK-05
@@ -47,6 +49,13 @@ Plans:
 3. Team bios for Vova and Joey are complete with roles
 4. Demo form validates required fields and shows error states
 5. Genre tags and partnership info are displayed
+
+Plans:
+- [ ] 02-01-PLAN.md — Track Record & Strategy Sections (Wave 1)
+- [ ] 02-02-PLAN.md — Services & Team Sections (Wave 1)
+- [ ] 02-03-PLAN.md — Genres & Partners Sections (Wave 2)
+- [ ] 02-04-PLAN.md — Demo Submission Form (Wave 2)
+- [ ] 02-05-PLAN.md — Contact & Footer Sections (Wave 3)
 
 ---
 
@@ -72,10 +81,11 @@ Plans:
 | Phase | Name | Requirements | Focus | Status |
 |-------|------|--------------|-------|--------|
 | 1 | Foundation & Hero | 10 | Structure, nav, hero, base styles | ✓ Complete |
-| 2 | Content Sections & Form | 33 | All content, form with validation | ○ Pending |
+| 2 | Content Sections & Form | 33 | All content, form with validation | ○ Planned |
 | 3 | Polish & Responsive | 8 | Visual motifs, textures, mobile | ○ Pending |
 
 **Total:** 3 phases covering 47 requirements
 
 ---
 *Roadmap created: 2026-01-19*
+*Phase 2 planned: 2026-01-19*
