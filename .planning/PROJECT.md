@@ -46,6 +46,13 @@ Artists can discover Antler Room's credibility through their track record and su
 - Photography style: High-grain, low-exposure, "digitally native" lo-fi aesthetic
 - Data presentation: Large, bolded stats
 
+**Logo Specification:**
+- "ANTLER" — Geometric sans-serif (Inter Bold, Franklin Gothic Heavy, or Montserrat Bold), uppercase, bold/extra-bold, tight letter spacing, solid white (#FFFFFF)
+- "Room" — Classic serif italic (Times New Roman Italic, Garamond Italic, or Minion Pro Italic), sentence case, regular weight, muted gold (#C5A059)
+- Both words on same baseline with intentional narrow gap between them
+- Background: Deep charcoal (#120E0B)
+- Visual contrast between heavy modern sans-serif and delicate traditional italic serif is intentional
+
 **Copy:** All copy provided in brief — headers, body text, team bios, form labels
 
 **Navigation items:** SUCCESS, STRATEGY, SERVICES, TEAM, GENRES, CONTACT, plus CTA button "SUBMIT DEMOS"
@@ -55,7 +62,7 @@ Artists can discover Antler Room's credibility through their track record and su
 - **Tech stack**: Static HTML/CSS/JS — no framework dependencies, fast load times
 - **Form**: Frontend validation only; backend integration deferred
 - **Assets**: Will need to create or source grain textures, sunburst/star SVGs
-- **Fonts**: Will use Google Fonts or system fonts matching the sans-serif aesthetic
+- **Fonts**: Montserrat Bold for "ANTLER" + headers, serif italic for "Room", clean sans-serif for body
 
 ## Key Decisions
 

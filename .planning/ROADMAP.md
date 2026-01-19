@@ -7,6 +7,7 @@
 
 ### Phase 1: Foundation & Hero
 **Goal:** Establish project structure, base styling, navigation, and hero section
+**Plans:** 2 plans
 
 **Requirements:**
 - NAV-01, NAV-02, NAV-03
@@ -18,6 +19,10 @@
 2. Navigation is visible and clicking links scrolls smoothly to sections (placeholders)
 3. "SUBMIT DEMOS" CTA is prominent in nav
 4. Typography follows brand guidelines (all-caps headers, clean body text)
+
+Plans:
+- [ ] 01-01-PLAN.md — Project Structure & CSS Foundation (Wave 1)
+- [ ] 01-02-PLAN.md — Navigation & Hero Section (Wave 2)
 
 ---
 
