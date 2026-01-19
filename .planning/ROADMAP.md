@@ -5,8 +5,9 @@
 
 ## Phases
 
-### Phase 1: Foundation & Hero
+### Phase 1: Foundation & Hero ✓
 **Goal:** Establish project structure, base styling, navigation, and hero section
+**Status:** Complete (2026-01-19)
 **Plans:** 2 plans
 
 **Requirements:**
@@ -21,8 +22,8 @@
 4. Typography follows brand guidelines (all-caps headers, clean body text)
 
 Plans:
-- [ ] 01-01-PLAN.md — Project Structure & CSS Foundation (Wave 1)
-- [ ] 01-02-PLAN.md — Navigation & Hero Section (Wave 2)
+- [x] 01-01-PLAN.md — Project Structure & CSS Foundation (Wave 1)
+- [x] 01-02-PLAN.md — Navigation & Hero Section (Wave 2)
 
 ---
 
@@ -68,11 +69,11 @@ Plans:
 
 ## Phase Summary
 
-| Phase | Name | Requirements | Focus |
-|-------|------|--------------|-------|
-| 1 | Foundation & Hero | 10 | Structure, nav, hero, base styles |
-| 2 | Content Sections & Form | 33 | All content, form with validation |
-| 3 | Polish & Responsive | 8 | Visual motifs, textures, mobile |
+| Phase | Name | Requirements | Focus | Status |
+|-------|------|--------------|-------|--------|
+| 1 | Foundation & Hero | 10 | Structure, nav, hero, base styles | ✓ Complete |
+| 2 | Content Sections & Form | 33 | All content, form with validation | ○ Pending |
+| 3 | Polish & Responsive | 8 | Visual motifs, textures, mobile | ○ Pending |
 
 **Total:** 3 phases covering 47 requirements
 
