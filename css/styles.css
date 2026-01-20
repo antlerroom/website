@@ -54,6 +54,10 @@ ul, ol {
   --color-cta-bg: var(--color-gold);
   --color-cta-text: var(--color-bg);
 
+  /* Error States */
+  --color-error: #e74c3c;
+  --color-error-bg: rgba(231, 76, 60, 0.05);
+
   /* Typography */
   --font-sans: 'Montserrat', sans-serif;
   --font-serif: 'Cormorant Garamond', serif;
