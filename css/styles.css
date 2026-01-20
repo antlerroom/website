@@ -536,6 +536,46 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-bg);
 }
 
+/* Partners Grid */
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-lg);
+  text-align: center;
+}
+
+.partner-card {
+  padding: var(--space-lg);
+}
+
+.partner-name {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+  margin-bottom: var(--space-xs);
+}
+
+.partner-description {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
+  font-size: 0.75rem;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-md);
+}
+
+.partner-detail {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+}
+
 /* =================================
    11. FORM STYLES
    ================================= */
