@@ -3,25 +3,25 @@
 ## Current Status
 
 **Phase:** 2 of 3 (Content Sections & Form)
-**Plan:** 3 of 5 complete
+**Plan:** 4 of 5 complete
 **Status:** In Progress
 **Last Updated:** 2026-01-20
 
-Progress: [==========..........] 60% (Phase 2)
+Progress: [============........] 80% (Phase 2)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Core value:** Artists can discover Antler Room's credibility and submit demos through a professional, on-brand experience
-**Current focus:** Phase 2 - Building content sections (Services, Team complete; Genres, Partners, Form remaining)
+**Current focus:** Phase 2 - Building content sections (Success, Strategy, Services, Team, Genres, Partners, Form complete; Contact remaining)
 
 ## Phase Progress
 
 | Phase | Status | Progress |
 |-------|--------|----------|
 | 1 | Complete | 100% (2/2 plans) |
-| 2 | In Progress | 60% (3/5 plans) |
+| 2 | In Progress | 80% (4/5 plans) |
 | 3 | Pending | 0% |
 
 ## Accumulated Decisions
@@ -41,10 +41,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 | Team cards use grid-template-rows: max-content 1fr | 02-02 | Consistent header/bio alignment |
 | Genre tags use 100px border-radius for pill shape | 02-03 | Common UI pattern for tags/badges |
 | Partners grid uses minmax(250px, 1fr) | 02-03 | Consistent with services grid |
+| HTML5 Constraint Validation API for form | 02-04 | Native browser support, better than custom regex |
+| novalidate on form to control error timing | 02-04 | Show errors on blur/submit, not during input |
+| Accessible checkbox pattern (opacity:0 input) | 02-04 | Maintains keyboard nav and screen reader support |
 
 ## Patterns Established
 
-- CSS organization: Reset > Custom Properties > Base > Typography > Utilities > Navigation > Hero > CTA > Sections > Content
+- CSS organization: Reset > Custom Properties > Base > Typography > Utilities > Navigation > Hero > CTA > Sections > Content > Forms
 - Color usage via semantic aliases (--color-text-primary) not raw values
 - Spacing scale using rem units (--space-xs through --space-2xl)
 - Logo pattern: .logo-antler (white, sans-serif, bold) + .logo-room (gold, serif, italic)
@@ -55,14 +58,25 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 - Team card: gold accent border under header, header + bio grid structure
 - Genre tag: gold border pill, hover inverts to gold bg with dark text
 - Partner card: centered text, name/type/detail hierarchy
+- Form input: transparent bg, white border 0.3 opacity, gold on focus
+- Form error: --color-error border, --color-error-bg background
+- Form validation: blur validates, input clears errors, submit validates all
 
 ## Session Continuity
 
 **Last session:** 2026-01-20 08:37
-**Stopped at:** Completed 02-03-PLAN.md
-**Resume file:** 02-04-PLAN.md (Contact) or 02-05-PLAN.md (Demo Form)
+**Stopped at:** Completed 02-04-PLAN.md
+**Resume file:** 02-05-PLAN.md (Contact)
 
 ## Session Log
+
+### 2026-01-20: Completed Plan 02-04 (Demo Submission Form)
+- Built complete demo form with 8 fields (artist name, email, release name, release type, listen link, genres, notes)
+- Implemented custom form styling with dark theme and gold accents
+- Added HTML5 Constraint Validation API for real-time validation
+- Created accessible custom checkbox components
+- Built form success state with TRANSMISSION RECEIVED message
+- Duration: 2 min 17 sec
 
 ### 2026-01-20: Completed Plan 02-03
 - Built Genres section with 6 pill-style genre tags (UK RAP, ALTERNATIVE, ELECTRONIC, AMBIENT, NEOCLASSICAL, POP)
