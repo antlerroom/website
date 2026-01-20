@@ -751,3 +751,34 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
   cursor: pointer;
 }
+
+/* Form Success State */
+.form-success {
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+.form-success-title {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gold);
+  margin-bottom: var(--space-lg);
+}
+
+.form-success-text {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
+}
+
+.form-success-note {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  opacity: 0.8;
+}
