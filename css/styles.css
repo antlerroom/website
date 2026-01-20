@@ -508,3 +508,30 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.7;
   color: var(--color-text-primary);
 }
+
+/* Genre Tags */
+.genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.genre-tag {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--color-gold);
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gold);
+  transition: all 0.2s ease;
+}
+
+.genre-tag:hover {
+  background-color: var(--color-gold);
+  color: var(--color-bg);
+}
