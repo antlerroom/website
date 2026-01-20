@@ -61,6 +61,8 @@ Plans:
 
 ### Phase 3: Polish & Responsive
 **Goal:** Add visual polish (textures, motifs) and ensure responsive design across devices
+**Status:** Planning Complete
+**Plans:** 2 plans in 2 waves
 
 **Requirements:**
 - NAV-04
@@ -74,6 +76,10 @@ Plans:
 4. Site looks good on mobile (320px), tablet (768px), and desktop (1200px+)
 5. All tap targets are appropriately sized on mobile
 
+Plans:
+- [ ] 03-01-PLAN.md — Mobile Navigation & Responsive Breakpoints (Wave 1)
+- [ ] 03-02-PLAN.md — Visual Polish - Grain, Sunbursts, Stars (Wave 2)
+
 ---
 
 ## Phase Summary
@@ -82,10 +88,11 @@ Plans:
 |-------|------|--------------|-------|--------|
 | 1 | Foundation & Hero | 10 | Structure, nav, hero, base styles | ✓ Complete |
 | 2 | Content Sections & Form | 33 | All content, form with validation | ✓ Complete |
-| 3 | Polish & Responsive | 8 | Visual motifs, textures, mobile | ○ Pending |
+| 3 | Polish & Responsive | 8 | Visual motifs, textures, mobile | ○ Planned |
 
 **Total:** 3 phases covering 47 requirements
 
 ---
 *Roadmap created: 2026-01-19*
 *Phase 2 complete: 2026-01-20*
+*Phase 3 planned: 2026-01-20*
