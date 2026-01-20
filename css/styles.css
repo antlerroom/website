@@ -395,3 +395,38 @@ h1, h2, h3, h4, h5, h6 {
   width: fit-content;
   margin: 0 auto;
 }
+
+/* Services Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-lg);
+}
+
+.service-card {
+  padding: var(--space-lg);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.service-card:hover {
+  border-color: var(--color-gold);
+}
+
+.service-title {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gold);
+  margin-bottom: var(--space-md);
+}
+
+.service-description {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
