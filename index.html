@@ -21,7 +21,17 @@
         <span class="logo-room">Room</span>
       </a>
 
-      <ul class="nav-links">
+      <button
+        class="nav-hamburger"
+        popovertarget="mobile-menu"
+        aria-label="Open navigation menu"
+      >
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+      <ul class="nav-links nav-links--desktop">
         <li><a href="#success">SUCCESS</a></li>
         <li><a href="#strategy">STRATEGY</a></li>
         <li><a href="#services">SERVICES</a></li>
@@ -30,8 +40,31 @@
         <li><a href="#contact">CONTACT</a></li>
       </ul>
 
-      <a href="#submit-demos" class="nav-cta">SUBMIT DEMOS</a>
+      <a href="#submit-demos" class="nav-cta nav-cta--desktop">SUBMIT DEMOS</a>
     </div>
+
+    <nav id="mobile-menu" class="mobile-menu" popover>
+      <button
+        class="mobile-menu-close"
+        popovertarget="mobile-menu"
+        popovertargetaction="hide"
+        aria-label="Close navigation menu"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <ul class="mobile-menu-links">
+        <li><a href="#success">SUCCESS</a></li>
+        <li><a href="#strategy">STRATEGY</a></li>
+        <li><a href="#services">SERVICES</a></li>
+        <li><a href="#team">TEAM</a></li>
+        <li><a href="#genres">GENRES</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+      <a href="#submit-demos" class="cta-button mobile-menu-cta">SUBMIT DEMOS</a>
+    </nav>
   </nav>
 
   <header class="hero" id="hero">
