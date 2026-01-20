@@ -318,3 +318,80 @@ h1, h2, h3, h4, h5, h6 {
 .section h2 {
   margin-bottom: var(--space-lg);
 }
+
+/* =================================
+   10. CONTENT SECTIONS
+   ================================= */
+
+/* Section Headers */
+.section-header-group {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.section-header {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+  margin-bottom: var(--space-lg);
+}
+
+.section-subheader {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Stats Grid - Track Record */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.stat-number {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  color: var(--color-gold);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-text-primary);
+}
+
+.section-note {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  opacity: 0.8;
+}
+
+.section .cta-button {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}
