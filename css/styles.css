@@ -396,6 +396,35 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 auto;
 }
 
+/* Strategy Grid */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-xl);
+}
+
+.strategy-pillar {
+  text-align: center;
+}
+
+.pillar-title {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gold);
+  margin-bottom: var(--space-md);
+}
+
+.pillar-description {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+}
+
 /* Services Grid */
 .services-grid {
   display: grid;
@@ -428,5 +457,50 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-regular);
   font-size: 0.9375rem;
   line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+/* Team Grid */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-xl);
+}
+
+.team-card {
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: var(--space-md);
+}
+
+.team-card-header {
+  border-bottom: 1px solid var(--color-gold);
+  padding-bottom: var(--space-md);
+}
+
+.team-card-name {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+  margin-bottom: var(--space-xs);
+}
+
+.team-card-role {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gold);
+}
+
+.team-card-bio {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.9375rem;
+  line-height: 1.7;
   color: var(--color-text-primary);
 }
