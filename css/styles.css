@@ -576,6 +576,54 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-primary);
 }
 
+/* Contact Section */
+.contact-email-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-xl);
+  text-align: center;
+}
+
+.contact-item {
+  padding: var(--space-lg);
+}
+
+.contact-role {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+.contact-email {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  font-size: 1.125rem;
+  color: var(--color-gold);
+  margin-bottom: var(--space-sm);
+  transition: opacity 0.2s ease;
+}
+
+.contact-email:hover {
+  opacity: 0.8;
+}
+
+.contact-email:focus {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 4px;
+}
+
+.contact-description {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  opacity: 0.8;
+}
+
 /* =================================
    11. FORM STYLES
    ================================= */
