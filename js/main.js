@@ -37,6 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /**
+   * Mobile Menu Link Handling
+   * Close mobile menu when clicking a navigation link
+   */
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (mobileMenu) {
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        // Close the popover when a link is clicked
+        mobileMenu.hidePopover();
+      });
+    });
+  }
+
+  /**
    * Form Validation
    * Uses HTML5 Constraint Validation API with custom error messages
    */
