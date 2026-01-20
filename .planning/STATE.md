@@ -34,6 +34,9 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 | Logo uses inline-flex with baseline alignment | 01-02 | Proper ANTLER/Room alignment on same baseline |
 | Hero title uses clamp() for responsive sizing | 01-02 | Fluid 3rem to 6rem based on viewport width |
 | Sections use scroll-margin-top for nav offset | 01-02 | Reliable scroll positioning under fixed nav |
+| Stats use clamp(2.5rem, 8vw, 4rem) for responsive sizing | 02-01 | Large gold numbers that scale with viewport |
+| CSS Grid with auto-fit minmax for content grids | 02-01 | Natural responsive behavior without media queries |
+| Section header group pattern for consistent headers | 02-01 | Reusable centered header with optional subheader |
 | minmax(250px) for services, minmax(300px) for team | 02-02 | Services fit 4 cards; team bios need more width |
 | Team cards use grid-template-rows: max-content 1fr | 02-02 | Consistent header/bio alignment |
 
@@ -63,10 +66,11 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 - Implemented services-grid and team-grid CSS components
 - Duration: 2 min
 
-### 2026-01-20: Plan 02-01 Content Exists
+### 2026-01-20: Completed Plan 02-01 (Track Record & Strategy)
 - Track Record section with stats grid (10B+, 1T+, 1B, 100M)
 - Strategy section with 4 pillars (Socials First, In-House Infrastructure, 100M Benchmark, Reactive Campaigning)
-- Note: Summary file was not created for this plan
+- Established section-header-group pattern for consistent section layouts
+- Duration: 2 min 33 sec
 
 ### 2026-01-19: Completed Plan 01-02 (Phase 1 Complete)
 - Built fixed navigation with logo, 6 section links, and SUBMIT DEMOS CTA
