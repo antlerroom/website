@@ -535,3 +535,179 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-gold);
   color: var(--color-bg);
 }
+
+/* =================================
+   11. FORM STYLES
+   ================================= */
+
+.demo-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.section-warning {
+  color: var(--color-gold);
+}
+
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.form-group-fieldset {
+  border: none;
+  padding: 0;
+}
+
+.form-group label,
+.form-group legend {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+/* Input base styles */
+.demo-form input[type="text"],
+.demo-form input[type="email"],
+.demo-form input[type="url"],
+.demo-form select,
+.demo-form textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Focus state */
+.demo-form input:focus,
+.demo-form select:focus,
+.demo-form textarea:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  background-color: rgba(197, 160, 89, 0.05);
+}
+
+/* Valid state */
+.demo-form input.valid,
+.demo-form select.valid,
+.demo-form textarea.valid {
+  border-color: var(--color-gold);
+}
+
+/* Invalid state */
+.demo-form input.invalid,
+.demo-form select.invalid,
+.demo-form textarea.invalid {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+/* Error message */
+.form-error {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-error);
+  margin-top: var(--space-xs);
+  min-height: 1.2em;
+}
+
+/* Placeholder styling */
+.demo-form input::placeholder,
+.demo-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Select dropdown styling */
+.demo-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23C5A059' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.demo-form select option {
+  background-color: var(--color-bg);
+  color: var(--color-white);
+}
+
+/* Checkbox styling */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-sm);
+}
+
+.checkbox-group input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.5rem 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-regular);
+  text-transform: none;
+  color: var(--color-white);
+  user-select: none;
+}
+
+.checkbox-custom {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+/* Focus state for checkbox */
+.checkbox-group input[type="checkbox"]:focus + .checkbox-custom {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Checked state */
+.checkbox-group input[type="checkbox"]:checked + .checkbox-custom {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+/* Checkmark */
+.checkbox-group input[type="checkbox"]:checked + .checkbox-custom::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--color-bg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Submit button */
+.form-submit {
+  width: 100%;
+  margin-top: var(--space-lg);
+  border: none;
+  cursor: pointer;
+}

@@ -182,6 +182,33 @@
       </div>
     </section>
 
+    <section id="partners" class="section">
+      <div class="container">
+        <header class="section-header-group">
+          <h2 class="section-header">OUR PARTNERS</h2>
+          <p class="section-subheader">We've built strategic relationships with industry leaders to ensure our artists have access to the best distribution, sync, and publishing opportunities available.</p>
+        </header>
+
+        <div class="partners-grid">
+          <article class="partner-card">
+            <h3 class="partner-name">SOUNDON</h3>
+            <p class="partner-description">Distribution</p>
+            <p class="partner-detail">Global distribution platform with priority access to playlist placements and promotional opportunities across all major streaming services.</p>
+          </article>
+          <article class="partner-card">
+            <h3 class="partner-name">DOWNTOWN</h3>
+            <p class="partner-description">Sync</p>
+            <p class="partner-detail">Industry-leading sync licensing connecting our catalog to film, television, advertising, and gaming opportunities worldwide.</p>
+          </article>
+          <article class="partner-card">
+            <h3 class="partner-name">WELL OVERDUE</h3>
+            <p class="partner-description">Publishing</p>
+            <p class="partner-detail">Publishing administration and creative development ensuring our artists maximize their songwriting revenue and opportunities.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="contact" class="section">
       <div class="container">
         <h2>CONTACT</h2>
@@ -191,8 +218,90 @@
 
     <section id="submit-demos" class="section">
       <div class="container">
-        <h2>SUBMIT DEMOS</h2>
-        <p>Demo submission form coming in Phase 2</p>
+        <header class="section-header-group">
+          <h2 class="section-header">DIRECT SUBMISSION</h2>
+          <p class="section-subheader section-warning">We only accept finished, mixed, and mastered tracks. Demos, rough cuts, and works-in-progress will not be reviewed. Make sure your music is ready for release before submitting.</p>
+        </header>
+
+        <form class="demo-form" novalidate>
+          <div class="form-group">
+            <label for="artist-name">Artist Name *</label>
+            <input type="text" id="artist-name" name="artist-name" required>
+            <span class="form-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Contact Email *</label>
+            <input type="email" id="email" name="email" required>
+            <span class="form-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="release-name">Release Name *</label>
+            <input type="text" id="release-name" name="release-name" required>
+            <span class="form-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="release-type">Release Type *</label>
+            <select id="release-type" name="release-type" required>
+              <option value="">Select type...</option>
+              <option value="single">Single</option>
+              <option value="ep">EP</option>
+              <option value="album">Album</option>
+            </select>
+            <span class="form-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="listen-link">Listen Link *</label>
+            <input type="url" id="listen-link" name="listen-link" required placeholder="https://...">
+            <span class="form-error" aria-live="polite"></span>
+          </div>
+
+          <fieldset class="form-group form-group-fieldset">
+            <legend>Genre (select all that apply)</legend>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" name="genre" value="uk-rap">
+                <span class="checkbox-custom"></span>
+                UK Rap
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="genre" value="alternative">
+                <span class="checkbox-custom"></span>
+                Alternative
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="genre" value="electronic">
+                <span class="checkbox-custom"></span>
+                Electronic
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="genre" value="ambient">
+                <span class="checkbox-custom"></span>
+                Ambient
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="genre" value="neoclassical">
+                <span class="checkbox-custom"></span>
+                Neoclassical
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="genre" value="pop">
+                <span class="checkbox-custom"></span>
+                Pop
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="form-group">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="4" placeholder="Tell us about your music, influences, and goals..."></textarea>
+          </div>
+
+          <button type="submit" class="cta-button form-submit">SEND TRANSMISSION</button>
+        </form>
       </div>
     </section>
   </main>
