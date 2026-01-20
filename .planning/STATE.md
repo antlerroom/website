@@ -3,18 +3,18 @@
 ## Current Status
 
 **Phase:** 3 of 3 (Polish & Responsive)
-**Plan:** 1 of 3 complete
+**Plan:** 2 of 3 complete
 **Status:** In Progress
 **Last Updated:** 2026-01-20
 
-Progress: [==================..] 33% (Phase 3)
+Progress: [====================] 67% (Phase 3)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Core value:** Artists can discover Antler Room's credibility and submit demos through a professional, on-brand experience
-**Current focus:** Phase 3 In Progress - Mobile navigation complete. Continuing with animations and SEO.
+**Current focus:** Phase 3 In Progress - Visual polish complete. Ready for SEO/metadata.
 
 ## Phase Progress
 
@@ -22,7 +22,7 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 |-------|--------|----------|
 | 1 | Complete | 100% (2/2 plans) |
 | 2 | Complete | 100% (5/5 plans) |
-| 3 | In Progress | 33% (1/3 plans) |
+| 3 | In Progress | 67% (2/3 plans) |
 
 ## Accumulated Decisions
 
@@ -51,10 +51,14 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 | 768px mobile breakpoint | 03-01 | Common tablet threshold for responsive design |
 | @starting-style for popover entry animations | 03-01 | CSS-only slide-in animation for popover |
 | --desktop modifier classes for nav visibility | 03-01 | Clean separation between mobile and desktop nav |
+| SVG feTurbulence for grain texture | 03-02 | Resolution-independent, no external image files |
+| Unique gradient IDs per sunburst | 03-02 | Avoid SVG ID conflicts when multiple instances |
+| transform/opacity animations only | 03-02 | GPU-accelerated for smooth performance |
+| Reduced grain on mobile (0.05 vs 0.08) | 03-02 | Better mobile performance |
 
 ## Patterns Established
 
-- CSS organization: Reset > Custom Properties > Base > Typography > Utilities > Navigation > Mobile Nav > Hero > CTA > Sections > Content > Forms > Footer > Responsive
+- CSS organization: Reset > Custom Properties > Base > Typography > Utilities > Navigation > Mobile Nav > Hero > CTA > Sections > Content > Forms > Footer > Responsive > Visual Effects
 - Color usage via semantic aliases (--color-text-primary) not raw values
 - Spacing scale using rem units (--space-xs through --space-2xl)
 - Logo pattern: .logo-antler (white, sans-serif, bold) + .logo-room (gold, serif, italic)
@@ -74,14 +78,25 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 - Touch targets: 44px minimum height/width on mobile
 - Breakpoint structure: mobile base, tablet @768px, desktop @1024px
 - Desktop nav visibility: --desktop class modifier pattern
+- Grain overlay: position fixed, z-index 9999, pointer-events none
+- Section divider: centered SVG sunburst, max-width 800px
+- Star animation: staggered delays (0-3.5s) for natural twinkle rhythm
+- Accessibility: prefers-reduced-motion disables animations
 
 ## Session Continuity
 
-**Last session:** 2026-01-20 09:02
-**Stopped at:** Completed 03-01-PLAN.md
-**Resume file:** None - ready for 03-02
+**Last session:** 2026-01-20 11:00
+**Stopped at:** Completed 03-02-PLAN.md
+**Resume file:** None - ready for 03-03
 
 ## Session Log
+
+### 2026-01-20: Completed Plan 03-02 (Visual Polish)
+- Added grain texture overlay using SVG feTurbulence
+- Added 3 sunburst dividers between hero/success, strategy/services, genres/partners
+- Added 5 twinkling star effects in footer
+- All animations respect prefers-reduced-motion
+- Duration: 7 min
 
 ### 2026-01-20: Completed Plan 03-01 (Mobile Navigation & Responsive Breakpoints)
 - Added hamburger menu using Popover API with slide-in animation
