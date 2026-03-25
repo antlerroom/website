@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antler Room | Info</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0D0D0D;
+      color: #E0E0E0;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* ========== COLOURS ========== */
+    :root {
+      --gold: #C9A96E;
+      --gold-light: #D4BA85;
+      --gold-dark: #A8884F;
+      --bg: #0D0D0D;
+      --bg-card: #151515;
+      --bg-panel: #1A1612;
+      --text: #E0E0E0;
+      --text-muted: #999;
+      --white: #FFFFFF;
+    }
+
+    /* ========== TYPOGRAPHY ========== */
+    h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; color: var(--white); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    .serif { font-family: 'Cormorant Garamond', serif; font-style: italic; text-transform: none; letter-spacing: 0.02em; }
+
+    /* ========== LAYOUT ========== */
+    .section { position: relative; z-index: 1; padding: 100px 0; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 768px) { .container { padding: 0 24px; } .section { padding: 70px 0; } }
+
+    /* ========== FADE-IN ANIMATIONS ========== */
+    .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ========== GOLD DECORATIVE ELEMENTS ========== */
+    .gold-divider { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 30px 0; }
+    .gold-divider .line { flex: 0 1 80px; height: 1px; background: var(--gold); opacity: 0.5; }
+    .gold-divider .star { flex-shrink: 0; }
+
+    .sparkle {
+      position: absolute;
+      color: var(--gold);
+      opacity: 0;
+      animation: sparkle-pulse 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes sparkle-pulse {
+      0%, 100% { opacity: 0; transform: scale(0.7); }
+      50% { opacity: 0.7; transform: scale(1); }
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(to top, var(--bg), transparent);
+      pointer-events: none;
+    }
+    .hero-antler { width: 80px; height: auto; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: 0.15em; margin-bottom: 12px; }
+    .hero-tagline { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--text); letter-spacing: 0.05em; margin-bottom: 6px; }
+    .hero-sub { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 300; }
+
+    /* ========== SPARKLE STAR SVG (reusable) ========== */
+    .star-svg { display: inline-block; }
+
+    /* ========== STAT BANNER ========== */
+    .stat-banner {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+    }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--gold); display: block; }
+    .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); }
+
+    /* ========== TEAM CARDS ========== */
+    .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    @media (max-width: 768px) { .team-grid { grid-template-columns: 1fr; max-width: 340px; } }
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(201,169,110,0.15);
+      padding: 32px;
+      text-align: center;
+    }
+    .team-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      display: block;
+    }
+    .team-card h3 { font-size: 1.3rem; margin-bottom: 14px; letter-spacing: 0.1em; }
+    .team-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; text-align: left; }
+    .team-footer { text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--text); }
+    .team-footer strong { color: var(--gold); font-weight: 600; }
+
+    /* ========== PILLARS ACCORDION ========== */
+    .pillars-section { max-width: 800px; margin: 0 auto; }
+    .pillar-accordion {
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+    }
+    .pillar-accordion summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 18px 0;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: color 0.3s ease;
+    }
+    .pillar-accordion summary:hover { color: var(--gold); }
+    .pillar-accordion summary::-webkit-details-marker { display: none; }
+    .pillar-accordion summary::after {
+      content: '+';
+      font-size: 1.2rem;
+      color: var(--gold);
+      font-weight: 300;
+      transition: transform 0.3s ease;
+    }
+    .pillar-accordion[open] summary::after {
+      content: '-';
+    }
+    .pillar-accordion .pillar-body {
+      padding: 0 0 20px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* ========== DEAL PHILOSOPHY ========== */
+    .deal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+    .deal-card {
+      border: 1px solid rgba(201,169,110,0.2);
+      padding: 30px;
+      text-align: center;
+    }
+    .deal-card .deal-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .deal-card .deal-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+    .deal-note {
+      text-align: center;
+      margin-top: 30px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    /* ========== CASE STUDIES ========== */
+    .case-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .artist-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+    @media (max-width: 768px) { .artist-cards { grid-template-columns: 1fr; } }
+    /* Kill all default link styling on this page */
+    a, a:link, a:visited, a:hover, a:active { color: inherit; }
+    a.artist-card, a.song-tile { text-decoration: none; cursor: pointer; display: block; }
+    .artist-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(201,169,110,0.1);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .artist-card:hover { border-color: rgba(201,169,110,0.3); transform: translateY(-3px); }
+    .artist-banner {
+      width: 100%;
+      height: 0;
+      padding-bottom: 28%;
+      background-size: 100% auto;
+      background-position: left bottom;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+    .artist-banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30%;
+      background: linear-gradient(to top, var(--bg-card), transparent);
+    }
+    .artist-card-body { padding: 20px 30px 30px; }
+    .artist-card h3 { font-size: 1.5rem; margin-bottom: 4px; text-transform: none; letter-spacing: 0.02em; }
+    .artist-listeners {
+      font-size: 0.78rem;
+      color: var(--gold);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .artist-card .artist-stats { list-style: none; }
+    .artist-card .artist-stats li {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+    .artist-card .artist-stats li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    /* ========== SONGS GRID ========== */
+    .songs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .song-tile {
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 0;
+      text-align: center;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .song-tile-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 85%;
+    }
+    .song-tile::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      transition: background 0.3s ease;
+      z-index: 1;
+    }
+    .song-tile:hover { border-color: rgba(201,169,110,0.3); transform: scale(1.02); }
+    .song-tile:hover::before { background: rgba(0,0,0,0.4); }
+    .song-streams {
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: 700;
+      color: var(--white);
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .song-streams-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 10px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+    .song-info { padding-top: 6px; }
+    .song-artist { font-size: 0.72rem; color: rgba(255,255,255,0.75); line-height: 1.4; text-shadow: 0 1px 4px rgba(0,0,0,0.6); display: block; }
+    .song-title { font-size: 0.72rem; color: var(--white); font-weight: 500; text-shadow: 0 1px 4px rgba(0,0,0,0.6); display: block; margin-top: 2px; }
+    .songs-more {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--gold);
+      background: linear-gradient(145deg, #1a1a1a, #111) !important;
+      aspect-ratio: 1;
+      font-style: italic;
+    }
+
+    /* ========== PROMOTE / MARKETING ========== */
+    .promote-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      margin-top: 40px;
+    }
+    @media (max-width: 768px) { .promote-grid { grid-template-columns: 1fr; gap: 30px; } }
+    .promote-block h3 {
+      font-size: 0.9rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+    .promote-block p, .promote-block li {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .promote-block ul {
+      list-style: none;
+      margin-top: 10px;
+    }
+    .promote-block ul li {
+      padding: 6px 0 6px 20px;
+      position: relative;
+    }
+    .promote-block ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      transform: translateY(-50%) rotate(45deg);
+    }
+    .infra-stats {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(201,169,110,0.15);
+    }
+    .infra-stat .num { font-size: 1.8rem; font-weight: 700; color: var(--gold); display: block; }
+    .infra-stat .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+
+    /* ========== CHANNEL ORBIT ========== */
+    .channel-orbit {
+      border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 50%;
+      animation: orbit-spin 20s linear infinite;
+    }
+    .orbit-item {
+      position: absolute;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+      animation: orbit-counter-spin 20s linear infinite;
+    }
+    @keyframes orbit-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes orbit-counter-spin { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+
+    /* ========== WHAT WE DO ========== */
+    .wwd-content { margin-top: 40px; }
+    .wwd-list { list-style: none; }
+    .wwd-list li {
+      padding: 14px 0 14px 24px;
+      font-size: 0.88rem;
+      color: var(--text);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      line-height: 1.7;
+    }
+    .wwd-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22px;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      transform: rotate(45deg);
+    }
+    .wwd-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      color: var(--text);
+      font-style: italic;
+      line-height: 1.7;
+      border-left: 2px solid var(--gold);
+      padding-left: 24px;
+    }
+
+    /* ========== ARTIST FREEDOM ========== */
+    .freedom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .freedom-card {
+      border: 1px solid rgba(201,169,110,0.15);
+      padding: 28px;
+      text-align: center;
+    }
+    .freedom-card .freedom-icon {
+      color: var(--gold);
+      margin-bottom: 14px;
+      display: block;
+    }
+    .freedom-card h4 {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .freedom-card p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ========== WHAT HAPPENS NEXT ========== */
+    .onboarding-steps {
+      margin-top: 50px;
+      position: relative;
+    }
+    .onboarding-steps::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 54px;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    @media (max-width: 768px) { .onboarding-steps::before { left: 16px; } }
+    .step {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+      padding: 30px 0;
+      position: relative;
+    }
+    .step-num {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: var(--bg);
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 768px) { .step-num { width: 32px; height: 32px; font-size: 0.8rem; } .step { gap: 20px; } }
+    .step-content h4 { font-size: 0.9rem; letter-spacing: 0.08em; margin-bottom: 6px; text-transform: uppercase; }
+    .step-content p { font-size: 0.84rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ========== CONTACT ========== */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 50px; text-align: center; }
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; gap: 30px; } }
+    .contact-person h3 { font-size: 1.1rem; margin-bottom: 4px; text-transform: none; letter-spacing: 0.03em; }
+    .contact-person .role { font-size: 0.78rem; color: var(--gold); margin-bottom: 16px; display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+    .contact-person .detail { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .contact-person a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+    .contact-person a:hover { color: var(--gold); }
+
+    /* ========== SECTION HEADING STYLE ========== */
+    .section-heading { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 10px; text-align: center; }
+    .section-sub { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.06em; text-align: center; }
+
+    /* ========== SCROLL INDICATOR ========== */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      animation: scroll-bounce 2s ease-in-out infinite;
+    }
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+      50% { transform: translateX(-50%) translateY(8px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero section">
+    <!-- Warm light leak edges from deck -->
+    <div style="position:absolute; top:0; right:0; width:45%; height:100%; pointer-events:none; overflow:hidden; mask-image:radial-gradient(ellipse at right center, black 0%, transparent 70%); -webkit-mask-image:radial-gradient(ellipse at right center, black 0%, transparent 70%);">
+      <img src="assets/lightleak.jpeg" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.18; mix-blend-mode:screen;" loading="lazy">
+    </div>
+    <div style="position:absolute; bottom:0; left:0; width:40%; height:100%; pointer-events:none; overflow:hidden; mask-image:radial-gradient(ellipse at left center, black 0%, transparent 70%); -webkit-mask-image:radial-gradient(ellipse at left center, black 0%, transparent 70%);">
+      <img src="assets/lightleak.jpeg" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.12; mix-blend-mode:screen; transform:rotate(180deg);" loading="lazy">
+    </div>
+    <!-- Scattered sparkles -->
+    <svg class="sparkle" style="top:18%;left:12%;animation-delay:0s" width="16" height="16" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+    <svg class="sparkle" style="top:25%;right:15%;animation-delay:0.8s" width="12" height="12" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+    <svg class="sparkle" style="top:60%;left:20%;animation-delay:1.5s" width="10" height="10" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+    <svg class="sparkle" style="top:70%;right:22%;animation-delay:2.2s" width="14" height="14" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+    <svg class="sparkle" style="top:40%;left:8%;animation-delay:1s" width="8" height="8" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+    <svg class="sparkle" style="top:50%;right:10%;animation-delay:1.8s" width="11" height="11" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+    <svg class="sparkle" style="top:15%;right:35%;animation-delay:2.5s" width="9" height="9" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+    <svg class="sparkle" style="top:80%;left:35%;animation-delay:0.5s" width="13" height="13" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/></svg>
+
+    <!-- Antler Logo - extracted directly from deck -->
+    <img src="assets/antlers.png" alt="Antler Room" class="hero-antler" style="width:160px; height:auto;" loading="eager">
+
+    <div class="gold-divider">
+      <span class="line"></span>
+      <svg class="star" width="14" height="14" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="#C9A96E"/></svg>
+      <span class="line"></span>
+    </div>
+
+    <h1>ANTLER ROOM</h1>
+
+    <div class="gold-divider">
+      <span class="line"></span>
+      <svg class="star" width="10" height="10" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="#C9A96E"/></svg>
+      <svg class="star" width="16" height="16" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="#C9A96E"/></svg>
+      <svg class="star" width="10" height="10" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="#C9A96E"/></svg>
+      <span class="line"></span>
+    </div>
+
+    <p class="hero-tagline">Independent Digital Record Label Shaping Global Culture</p>
+    <p class="hero-sub">Built for Digitally Native Audiences</p>
+
+    <a href="#team" class="scroll-indicator" style="text-decoration:none;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </a>
+  </section>
+
+  <!-- ========== THE TEAM ========== -->
+  <section class="section" id="team">
+    <div class="container fade-in">
+      <h2 class="section-heading">The Team</h2>
+
+      <div class="stat-banner" style="margin-top: 30px;">
+        <div class="stat-item">
+          <span class="stat-number">10B+</span>
+          <span class="stat-label">Streams</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">1T+</span>
+          <span class="stat-label">Social Views</span>
+        </div>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <img src="../media/Vova.png" alt="Vova Sutyagin" loading="lazy">
+          <div>
+            <h3>Vova</h3>
+            <p>Former Head of Marketing at Kurate Music, Vova led a world-class team driving creator-powered campaigns for leading electronic, alternative, pop, and rap artists. His work generated 10B+ streams, 1T+ social views, and placed dozens of records on Spotify Global Viral, TikTok Viral, and Billboard charts. With 7+ years of influencer marketing experience, Vova pioneered techniques now widely adopted in modern social music marketing.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <img src="../media/Joey.png" alt="Joey Schoen" loading="lazy">
+          <div>
+            <h3>Joey</h3>
+            <p>Former Head of A&R and Label Management at Kurate Music, Joey developed and managed world-leading ambient artists, including Øneheart and .diedlonely, and opened major collaborations with Moby and other high-profile artists. He signed rising acts such as Andrea Vanzo and Cult Member across the ambient, electronic, and neoclassical spaces. Well-connected throughout the industry and experienced in label strategy, artist development, sync, and operations, Joey brings a broad skillset focusing on building artists from the ground up.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="team-footer">New Blood. Modern Approach.<br><strong>Experience in working dozens of viral hits and managing a $100M+ indie label.</strong></p>
+    </div>
+  </section>
+
+  <!-- ========== PILLARS ACCORDION ========== -->
+  <section class="section fade-in">
+    <div class="container pillars-section">
+      <h2 class="section-heading" style="margin-bottom: 30px;">Antler Room</h2>
+      <details class="pillar-accordion">
+        <summary>Digital-First Strategy</summary>
+        <div class="pillar-body">Our mission is to get eyes and ears on your music. We make digital marketing our focus in order to level the playing field and give you the most opportunities for success. Open lines of communication, hard work, and adaptability in an ever-changing industry.</div>
+      </details>
+      <details class="pillar-accordion">
+        <summary>Artistic Freedom</summary>
+        <div class="pillar-body">You control your creative output. We never interfere with your sound, identity, or artistic direction. You set the schedule, we adapt around you.</div>
+      </details>
+      <details class="pillar-accordion">
+        <summary>Fair Deals</summary>
+        <div class="pillar-body">Transparent terms. No hidden clauses. We believe in structures that reflect the work both sides put in.</div>
+      </details>
+      <details class="pillar-accordion">
+        <summary>Outstanding Results</summary>
+        <div class="pillar-body">We are defined by the Internet. Our experience in viral music and digital marketing campaigns position us at the front of the industry. From indie, to pop, to rap, to alternative house. Sounds which resonate are everything. Relentlessly focused on melody and art. Built for digitally native audiences.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ========== DEAL PHILOSOPHY ========== -->
+  <section class="section" id="deal">
+    <div class="container fade-in">
+      <h2 class="section-heading">Deal Philosophy</h2>
+      <p class="section-sub">Transparent terms. No hidden clauses.</p>
+
+      <div class="deal-grid" style="grid-template-columns: 1fr 1fr; max-width: 500px; margin-left: auto; margin-right: auto;">
+        <div class="deal-card">
+          <span class="deal-value">60 / 40</span>
+          <span class="deal-label">Net Receipts Split<br>(Artist / Label)</span>
+        </div>
+        <div class="deal-card">
+          <span class="deal-value">10 yr</span>
+          <span class="deal-label">Standard Term</span>
+        </div>
+      </div>
+
+      <p class="deal-note">Track by Track</p>
+      <p style="text-align:center; margin-top: 8px; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.06em;">you stay independent</p>
+    </div>
+  </section>
+
+  <!-- ========== CASE STUDIES: ARTISTS ========== -->
+  <section class="section" id="case-studies">
+    <div class="container fade-in">
+      <h2 class="section-heading">Case Studies</h2>
+
+      <div class="artist-cards">
+        <a href="https://open.spotify.com/artist/0dgJbQ0bKPyUXco8hEXN7X" target="_blank" rel="noopener" class="artist-card">
+          <div class="artist-banner" style="background-image: url('assets/artist_oneheart.jpeg');"></div>
+          <div class="artist-card-body">
+            <h3>Øneheart</h3>
+
+            <ul class="artist-stats">
+              <li>Most-streamed ambient artist on the planet</li>
+              <li>1B streams on "Snowfall"</li>
+              <li>2B weekly social views</li>
+              <li>Double Platinum RIAA</li>
+            </ul>
+          </div>
+        </a>
+        <a href="https://open.spotify.com/artist/4MrQDA45Gd0llLrwFUzimG" target="_blank" rel="noopener" class="artist-card">
+          <div class="artist-banner" style="background-image: url('assets/artist_flawedmangoes.jpeg');"></div>
+          <div class="artist-card-body">
+            <h3>Flawed Mangoes</h3>
+
+            <ul class="artist-stats">
+              <li>World-leading viral guitar artist</li>
+              <li>100M streams on "Killswitch Lullaby"</li>
+              <li>10B social views</li>
+            </ul>
+          </div>
+        </a>
+        <a href="https://open.spotify.com/artist/2LbjW13j6rNtFgYcPjR2ur" target="_blank" rel="noopener" class="artist-card">
+          <div class="artist-banner" style="background-image: url('assets/artist_diedlonely.jpeg');"></div>
+          <div class="artist-card-body">
+            <h3>.diedlonely</h3>
+
+            <ul class="artist-stats">
+              <li>Leading TikTok dark-ambient viral artist</li>
+              <li>100M streams on "stellar"</li>
+              <li>2M UGC videos</li>
+              <li>75.6B social views</li>
+            </ul>
+          </div>
+        </a>
+        <a href="https://open.spotify.com/artist/1pR1W2iWfLwtMK776UeIcF" target="_blank" rel="noopener" class="artist-card">
+          <div class="artist-banner" style="background-image: url('assets/artist_cultmember.jpeg');"></div>
+          <div class="artist-card-body">
+            <h3>Cult Member</h3>
+
+            <ul class="artist-stats">
+              <li>Internet music icon</li>
+              <li>28M+ streams on "2017 Archives"</li>
+              <li>416M social views</li>
+            </ul>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CASE STUDIES: SONGS GRID ========== -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container fade-in">
+      <p class="section-sub" style="margin-bottom: 0;">Songs We've Worked</p>
+
+      <div class="songs-grid">
+        <a href="https://open.spotify.com/track/2CIlKt4lRwAAUx5fYgCBxN" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_ecstacy.jpeg');"><div class="song-tile-inner"><span class="song-streams">500M</span><span class="song-streams-label">Streams</span><span class="song-artist">SUICIDAL-IDOL</span><span class="song-title">ecstacy</span></div></a>
+        <a href="https://open.spotify.com/track/4hjRjhLvBIMUUhRjb7DACd" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_vyrval.jpeg');"><div class="song-tile-inner"><span class="song-streams">359M</span><span class="song-streams-label">Streams</span><span class="song-artist">vyrval</span><span class="song-title">*H+3+RD*7luCJloOT6...</span></div></a>
+        <a href="https://open.spotify.com/track/1lb3H41lbvAN28N7yqRNL9" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_idea10.jpeg');"><div class="song-tile-inner"><span class="song-streams">264M</span><span class="song-streams-label">Streams</span><span class="song-artist">Gibran Alcocer</span><span class="song-title">Idea 10</span></div></a>
+        <a href="https://open.spotify.com/track/0X4YYZtZcvqNqYIpMd93IT" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_temporary.jpeg');"><div class="song-tile-inner"><span class="song-streams">250M</span><span class="song-streams-label">Streams</span><span class="song-artist">my head is empty</span><span class="song-title">i was only temporary</span></div></a>
+        <a href="https://open.spotify.com/track/5GLNE2kxoAouIaNyWvam80" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_dontstop.jpeg');"><div class="song-tile-inner"><span class="song-streams">100M</span><span class="song-streams-label">Streams</span><span class="song-artist">GLXXMSTRIDER</span><span class="song-title">DON'T STOP</span></div></a>
+        <a href="https://open.spotify.com/track/2S5EpxS6WhQkBlj3WJYXFJ" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_eeyuh.jpeg');"><div class="song-tile-inner"><span class="song-streams">40M</span><span class="song-streams-label">Streams</span><span class="song-artist">HR</span><span class="song-title">EEYUH!</span></div></a>
+        <a href="https://open.spotify.com/track/1KoWiQGR2ry2N1NvAN5r0M" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_sundown.jpeg');"><div class="song-tile-inner"><span class="song-streams">28M</span><span class="song-streams-label">Streams</span><span class="song-artist">$undown</span><span class="song-title">Stray.wav</span></div></a>
+        <a href="https://open.spotify.com/track/6Q06JnZvvGpivyuLdD404e" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_solitude.jpeg');"><div class="song-tile-inner"><span class="song-streams">25M</span><span class="song-streams-label">Streams</span><span class="song-artist">juno, blindheart</span><span class="song-title">Solitude</span></div></a>
+        <a href="https://open.spotify.com/track/2aRjdfibMVQyl5iw9epBGt" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_bleach.jpeg');"><div class="song-tile-inner"><span class="song-streams">23M</span><span class="song-streams-label">Streams</span><span class="song-artist">Vandalism</span><span class="song-title">bleach</span></div></a>
+        <a href="https://open.spotify.com/track/6o3RzW888Fz2YBtzPtROiD" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_drowning.jpeg');"><div class="song-tile-inner"><span class="song-streams">20M</span><span class="song-streams-label">Streams</span><span class="song-artist">Antent, vowl.</span><span class="song-title">drowning</span></div></a>
+        <a href="https://open.spotify.com/track/6e1079QKt7GGlJyyP8cO1u" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_findamelody.jpeg');"><div class="song-tile-inner"><span class="song-streams">13M</span><span class="song-streams-label">Streams</span><span class="song-artist">Andrea Vanzo</span><span class="song-title">Find a Melody</span></div></a>
+        <div class="song-tile songs-more">and many more&hellip;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW WE PROMOTE ========== -->
+  <section class="section" id="promote">
+    <div class="container fade-in">
+      <h2 class="section-heading">How We Promote Your Music</h2>
+
+      <div class="promote-grid">
+        <div class="promote-block">
+          <h3>TikTok - Our Core Engine</h3>
+          <p>TikTok is the heart of our marketing strategy and is the world's leading music discovery engine. With a strong focus on in-house content, we get millions of ears and eyes on your music, engineer trends, and target the right audience clusters from day one.</p>
+        </div>
+        <div class="promote-block" style="display: flex; align-items: center; justify-content: center;">
+          <div style="position:relative; width:220px; height:220px;">
+            <div class="channel-orbit" style="position:absolute; inset:0;">
+              <span class="orbit-item" style="top:-8px; left:50%; margin-left:-14px;">TikTok</span>
+              <span class="orbit-item" style="top:15%; right:-20px;">Instagram</span>
+              <span class="orbit-item" style="bottom:15%; right:-18px;">YouTube</span>
+              <span class="orbit-item" style="bottom:-8px; left:50%; margin-left:-28px;">Playlists</span>
+              <span class="orbit-item" style="bottom:15%; left:-16px;">Shorts</span>
+            </div>
+            <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:0.7rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Marketing</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in" style="margin-top: 50px; text-align: center;">
+        <h3 style="font-size: 0.9rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px;">Marketing Infrastructure</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.8; max-width: 700px; margin: 0 auto;">We run dozens of in-house pages to support artists and their vision. We dedicate content across our network, tailored for each campaign, with a precise understanding of creator segments and a ready-to-go influencer network so that you get views and streams.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHAT WE DO FOR YOU ========== -->
+  <section class="section" id="services">
+    <div class="container fade-in">
+      <h2 class="section-heading">What We Do For You</h2>
+
+      <div class="wwd-content">
+        <ul class="wwd-list">
+          <li>Engineered social campaigns targeting 100M+ views per release across TikTok, Reels, and Shorts</li>
+          <li>In-house content creation paired with a UGC strategy built around your sound</li>
+          <li>Pre-release sound injection to test content and ensure a strong song launch</li>
+          <li>Real-time campaign optimisation, we monitor and adapt as trends shift on your music</li>
+          <li>Dedicated influencer network</li>
+          <li>Streaming-first approach that opens doors to sync, live shows, and global reach</li>
+          <li>Direct, personal support, you speak with us</li>
+        </ul>
+        <blockquote class="wwd-quote" style="margin-top: 40px; text-align: center; border-left: none; padding-left: 0;">
+          Our mission is to bring you cultural success through engineered social campaigns, focus, and personal support.
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ARTISTIC FREEDOM ========== -->
+  <section class="section" id="freedom">
+    <div class="container fade-in">
+      <h2 class="section-heading">Artistic Freedom</h2>
+      <p class="section-sub">Your music, your vision. We handle the rest.</p>
+
+      <div class="freedom-grid">
+        <div class="freedom-card">
+          <span class="freedom-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+          </span>
+          <h4>Your Creative Output</h4>
+          <p>We never interfere with your creative direction, sound, or artistic identity.</p>
+        </div>
+        <div class="freedom-card">
+          <span class="freedom-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+          <h4>Your Schedule</h4>
+          <p>We adapt our campaigns around you and release when you're ready.</p>
+        </div>
+        <div class="freedom-card">
+          <span class="freedom-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </span>
+          <h4>We Handle Marketing</h4>
+          <p>You live and breathe music. We live and breathe marketing. A perfect combination!</p>
+        </div>
+        <div class="freedom-card">
+          <span class="freedom-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <h4>Open Communication</h4>
+          <p>No layers, no delays. Direct access to us.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHAT HAPPENS NEXT ========== -->
+  <section class="section" id="next">
+    <div class="container fade-in">
+      <h2 class="section-heading">What Happens Next</h2>
+      <p class="section-sub">From signing to streaming - here's how we work together.</p>
+
+      <div class="onboarding-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Sign &amp; Kickoff</h4>
+            <p>We start with a collaborative strategy session. Get to know each other, align on goals, and map out the vision for your releases.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Build Together</h4>
+            <p>We develop the release strategy together, planning content, building a narrative, and aligning the creative direction for marketing.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Pre-Release</h4>
+            <p>We inject the sound into the ecosystem before release. Test content, build momentum, seed the right communities, and get everything primed.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Launch &amp; React</h4>
+            <p>Release day hits and we go into our main campaign. We monitor performance in real-time, double down on what's working, and optimise in real time.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Ongoing Support</h4>
+            <p>We're in it for the long run. We provide continuous support, strategic advice, and are able to react to ensure your success as you and your records evolve.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT ========== -->
+  <section class="section" id="contact" style="padding: 60px 0 40px;">
+    <div class="container fade-in">
+      <h2 class="section-heading" style="font-size: 1.5rem; margin-bottom: 24px;">Contact</h2>
+
+      <div class="contact-grid" style="gap: 40px; margin-top: 20px;">
+        <div class="contact-person">
+          <h3 style="font-size: 0.95rem;">Vova Sutyagin</h3>
+          <span class="role" style="font-size: 0.68rem; margin-bottom: 10px;">Co-Founder | Marketing &amp; Promotions</span>
+          <p class="detail" style="font-size: 0.8rem;"><a href="tel:+447598893929">+44 7598 893929</a> &nbsp;&middot;&nbsp; <a href="mailto:vova@antlerroom.co.uk">vova@antlerroom.co.uk</a></p>
+        </div>
+        <div class="contact-person">
+          <h3 style="font-size: 0.95rem;">Joey Schoen</h3>
+          <span class="role" style="font-size: 0.68rem; margin-bottom: 10px;">Co-Founder | A&amp;R</span>
+          <p class="detail" style="font-size: 0.8rem;"><a href="tel:+447577892313">+44 7577 892313</a> &nbsp;&middot;&nbsp; <a href="mailto:joey@antlerroom.co.uk">joey@antlerroom.co.uk</a></p>
+        </div>
+      </div>
+
+      <div class="gold-divider" style="margin-top: 40px;">
+        <span class="line"></span>
+        <svg width="10" height="10" viewBox="0 0 16 16"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="#C9A96E"/></svg>
+        <span class="line"></span>
+      </div>
+      <p style="text-align:center; margin-top: 12px; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase;">Antler Room</p>
+    </div>
+  </section>
+
+  <script>
+    // Intersection Observer for fade-in animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.01, rootMargin: '200px 0px 0px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Safety: reveal any elements that are above the current scroll position
+    // (in case observer missed them during fast scroll)
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.fade-in:not(.visible)').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight + 100) {
+          el.classList.add('visible');
+        }
+      });
+    }, { passive: true });
+  </script>
+</body>
+</html>
