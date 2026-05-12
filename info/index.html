@@ -547,6 +547,104 @@
 </head>
 <body>
 
+  <!-- ========== PASSWORD GATE ========== -->
+  <style id="ar-gate-style">
+    html.ar-locked, html.ar-locked body { overflow: hidden !important; height: 100vh !important; touch-action: none; }
+    #ar-gate-overlay {
+      position: fixed; inset: 0; z-index: 99999; pointer-events: none;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 0 24px 48px;
+    }
+    #ar-gate-form {
+      pointer-events: auto;
+      background: rgba(13,13,13,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,169,110,0.45);
+      padding: 18px 22px; border-radius: 4px;
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.7);
+      max-width: 92vw;
+    }
+    #ar-gate-label {
+      color: #C9A96E;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.18em;
+      text-transform: uppercase; font-weight: 600;
+      white-space: nowrap;
+    }
+    #ar-gate-input {
+      background: transparent; border: none;
+      border-bottom: 1px solid rgba(201,169,110,0.5);
+      color: #fff; padding: 6px 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem; letter-spacing: 0.2em;
+      outline: none; width: 150px;
+    }
+    #ar-gate-input:focus { border-bottom-color: #C9A96E; }
+    #ar-gate-submit {
+      background: #C9A96E; color: #0D0D0D;
+      border: none; padding: 9px 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      cursor: pointer; border-radius: 2px;
+    }
+    #ar-gate-submit:hover { background: #D4BA85; }
+    #ar-gate-error { color: #E74C3C; font-size: 0.68rem; letter-spacing: 0.12em; display: none; text-transform: uppercase; }
+    #ar-gate-error.show { display: inline; }
+    @media (max-width: 480px) {
+      #ar-gate-overlay { padding: 0 14px 24px; }
+      #ar-gate-form { padding: 14px 16px; gap: 10px; }
+      #ar-gate-input { width: 100%; }
+      #ar-gate-submit { width: 100%; }
+    }
+  </style>
+  <script>
+    (function(){
+      var KEY = 'ar_unlocked_v1';
+      if (sessionStorage.getItem(KEY) === '1') return;
+      document.documentElement.classList.add('ar-locked');
+      function init() {
+        if (sessionStorage.getItem(KEY) === '1') {
+          document.documentElement.classList.remove('ar-locked');
+          return;
+        }
+        var overlay = document.createElement('div');
+        overlay.id = 'ar-gate-overlay';
+        overlay.innerHTML =
+          '<form id="ar-gate-form" autocomplete="off">' +
+            '<label id="ar-gate-label" for="ar-gate-input">Enter Password</label>' +
+            '<input id="ar-gate-input" type="password" autocomplete="off" spellcheck="false" aria-label="Password" />' +
+            '<button id="ar-gate-submit" type="submit">Unlock</button>' +
+            '<span id="ar-gate-error">Incorrect</span>' +
+          '</form>';
+        document.body.appendChild(overlay);
+        var form = overlay.querySelector('#ar-gate-form');
+        var input = overlay.querySelector('#ar-gate-input');
+        var err = overlay.querySelector('#ar-gate-error');
+        form.addEventListener('submit', function(e){
+          e.preventDefault();
+          if (input.value === 'AR2026') {
+            sessionStorage.setItem(KEY, '1');
+            document.documentElement.classList.remove('ar-locked');
+            overlay.remove();
+          } else {
+            err.classList.add('show');
+            input.value = '';
+            input.focus();
+          }
+        });
+        input.addEventListener('input', function(){ err.classList.remove('show'); });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
   <!-- ========== HERO ========== -->
   <section class="hero section">
     <!-- Warm light leak edges from deck -->
