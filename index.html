@@ -97,10 +97,53 @@
   <script>
     (function(){
       var KEY = 'ar_unlocked_v1';
-      if (sessionStorage.getItem(KEY) === '1') return;
+      var locked = sessionStorage.getItem(KEY) !== '1';
+      if (!locked) return;
       document.documentElement.classList.add('ar-locked');
+
+      var SCROLL_KEYS = { 32:1, 33:1, 34:1, 35:1, 36:1, 37:1, 38:1, 39:1, 40:1 };
+
+      function isGateField(t){
+        return t && (t.id === 'ar-gate-input' || t.id === 'ar-gate-submit' || (t.closest && t.closest('#ar-gate-form')));
+      }
+      function swallowClick(e){
+        if (!locked) return;
+        var t = e.target;
+        if (isGateField(t)) return;
+        var a = t.closest ? t.closest('a') : null;
+        if (a) {
+          var href = a.getAttribute('href') || '';
+          if (href.charAt(0) === '#' || href === '' || a.hash) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {}
+            var input = document.getElementById('ar-gate-input');
+            if (input) input.focus();
+          }
+        }
+      }
+      function swallowKey(e){
+        if (!locked) return;
+        if (isGateField(e.target)) return;
+        if (SCROLL_KEYS[e.keyCode]) { e.preventDefault(); }
+      }
+      function swallowWheel(e){ if (locked) e.preventDefault(); }
+
+      document.addEventListener('click', swallowClick, true);
+      document.addEventListener('keydown', swallowKey, true);
+      document.addEventListener('wheel', swallowWheel, { passive: false, capture: true });
+      document.addEventListener('touchmove', swallowWheel, { passive: false, capture: true });
+      window.addEventListener('hashchange', function(){
+        if (!locked) return;
+        try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {}
+        window.scrollTo(0, 0);
+      });
+      window.addEventListener('scroll', function(){ if (locked) window.scrollTo(0, 0); }, { passive: true });
+
       function init() {
         if (sessionStorage.getItem(KEY) === '1') {
+          locked = false;
           document.documentElement.classList.remove('ar-locked');
           return;
         }
@@ -121,6 +164,7 @@
           e.preventDefault();
           if (input.value === 'AR2026') {
             sessionStorage.setItem(KEY, '1');
+            locked = false;
             document.documentElement.classList.remove('ar-locked');
             overlay.remove();
           } else {
