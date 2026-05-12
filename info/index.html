@@ -550,6 +550,9 @@
   <!-- ========== PASSWORD GATE ========== -->
   <style id="ar-gate-style">
     html.ar-locked, html.ar-locked body { overflow: hidden !important; height: 100vh !important; touch-action: none; }
+    html.ar-locked .scroll-indicator,
+    html.ar-locked .hero a[href^="#"] { display: none !important; visibility: hidden !important; pointer-events: none !important; }
+    html.ar-locked section:not(.hero) { pointer-events: none !important; }
     #ar-gate-overlay {
       position: fixed; inset: 0; z-index: 99999; pointer-events: none;
       display: flex; align-items: flex-end; justify-content: center;

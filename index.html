@@ -44,6 +44,16 @@
   <!-- ========== PASSWORD GATE ========== -->
   <style id="ar-gate-style">
     html.ar-locked, html.ar-locked body { overflow: hidden !important; height: 100vh !important; touch-action: none; }
+    html.ar-locked .nav,
+    html.ar-locked .mobile-menu,
+    html.ar-locked .hero .cta-button,
+    html.ar-locked .hero-content a[href^="#"],
+    html.ar-locked .nav-cta,
+    html.ar-locked .nav-hamburger { display: none !important; visibility: hidden !important; pointer-events: none !important; }
+    html.ar-locked main,
+    html.ar-locked footer,
+    html.ar-locked .section-divider,
+    html.ar-locked .grain-overlay { pointer-events: none !important; }
     #ar-gate-overlay {
       position: fixed; inset: 0; z-index: 99999; pointer-events: none;
       display: flex; align-items: flex-end; justify-content: center;
