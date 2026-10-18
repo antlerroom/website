@@ -242,7 +242,8 @@
       height: 0;
       padding-bottom: 28%;
       background-size: 100% auto;
-      background-position: left bottom;
+      /* crops off the stale "monthly listeners" line baked into the Spotify screenshots */
+      background-position: left 35%;
       background-repeat: no-repeat;
       position: relative;
     }
@@ -802,21 +803,18 @@
   <section class="section" id="deal">
     <div class="container fade-in">
       <h2 class="section-heading">Deal Philosophy</h2>
-      <p class="section-sub">Transparent terms. No hidden clauses.</p>
 
-      <div class="deal-grid" style="grid-template-columns: 1fr 1fr; max-width: 500px; margin-left: auto; margin-right: auto;">
+      <div class="deal-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); max-width: 820px; margin-left: auto; margin-right: auto; margin-top: 50px;">
         <div class="deal-card">
-          <span class="deal-value">60 / 40</span>
-          <span class="deal-label">Net Receipts Split<br>(Artist / Label)</span>
+          <span class="deal-value" style="font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;">Artist-First Splits</span>
         </div>
         <div class="deal-card">
-          <span class="deal-value">10 yr</span>
-          <span class="deal-label">Standard Term</span>
+          <span class="deal-value" style="font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;">Better Contracts</span>
+        </div>
+        <div class="deal-card">
+          <span class="deal-value" style="font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;">Record by Record</span>
         </div>
       </div>
-
-      <p class="deal-note">Track by Track</p>
-      <p style="text-align:center; margin-top: 8px; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.06em;">you stay independent</p>
     </div>
   </section>
 
@@ -827,13 +825,13 @@
 
       <div class="artist-cards">
         <a href="https://open.spotify.com/artist/0dgJbQ0bKPyUXco8hEXN7X" target="_blank" rel="noopener" class="artist-card">
-          <div class="artist-banner" style="background-image: url('assets/artist_oneheart.jpeg');"></div>
+          <div class="artist-banner" style="background-image: url('assets/artist_oneheart.jpeg'); background-size: auto 135%; background-position: left 10%;"></div>
           <div class="artist-card-body">
             <h3>Øneheart</h3>
-
+            <span class="artist-listeners">5.2M monthly listeners</span>
             <ul class="artist-stats">
               <li>Most-streamed ambient artist on the planet</li>
-              <li>1B streams on "Snowfall"</li>
+              <li>1.6B streams on "snowfall"</li>
               <li>2B weekly social views</li>
               <li>Double Platinum RIAA</li>
             </ul>
@@ -843,10 +841,10 @@
           <div class="artist-banner" style="background-image: url('assets/artist_flawedmangoes.jpeg');"></div>
           <div class="artist-card-body">
             <h3>Flawed Mangoes</h3>
-
+            <span class="artist-listeners">3M monthly listeners</span>
             <ul class="artist-stats">
               <li>World-leading viral guitar artist</li>
-              <li>100M streams on "Killswitch Lullaby"</li>
+              <li>174M streams on "Killswitch Lullaby"</li>
               <li>10B social views</li>
             </ul>
           </div>
@@ -855,10 +853,10 @@
           <div class="artist-banner" style="background-image: url('assets/artist_diedlonely.jpeg');"></div>
           <div class="artist-card-body">
             <h3>.diedlonely</h3>
-
+            <span class="artist-listeners">2.1M monthly listeners</span>
             <ul class="artist-stats">
               <li>Leading TikTok dark-ambient viral artist</li>
-              <li>100M streams on "stellar"</li>
+              <li>178M streams on "stellar"</li>
               <li>2M UGC videos</li>
               <li>75.6B social views</li>
             </ul>
@@ -868,7 +866,7 @@
           <div class="artist-banner" style="background-image: url('assets/artist_cultmember.jpeg');"></div>
           <div class="artist-card-body">
             <h3>Cult Member</h3>
-
+            <span class="artist-listeners">2.6M monthly listeners</span>
             <ul class="artist-stats">
               <li>Internet music icon</li>
               <li>28M+ streams on "2017 Archives"</li>
@@ -886,17 +884,17 @@
       <p class="section-sub" style="margin-bottom: 0;">Songs We've Worked</p>
 
       <div class="songs-grid">
-        <a href="https://open.spotify.com/track/2CIlKt4lRwAAUx5fYgCBxN" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_ecstacy.jpeg');"><div class="song-tile-inner"><span class="song-streams">500M</span><span class="song-streams-label">Streams</span><span class="song-artist">SUICIDAL-IDOL</span><span class="song-title">ecstacy</span></div></a>
-        <a href="https://open.spotify.com/track/4hjRjhLvBIMUUhRjb7DACd" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_vyrval.jpeg');"><div class="song-tile-inner"><span class="song-streams">359M</span><span class="song-streams-label">Streams</span><span class="song-artist">vyrval</span><span class="song-title">*H+3+RD*7luCJloOT6...</span></div></a>
-        <a href="https://open.spotify.com/track/1lb3H41lbvAN28N7yqRNL9" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_idea10.jpeg');"><div class="song-tile-inner"><span class="song-streams">264M</span><span class="song-streams-label">Streams</span><span class="song-artist">Gibran Alcocer</span><span class="song-title">Idea 10</span></div></a>
-        <a href="https://open.spotify.com/track/0X4YYZtZcvqNqYIpMd93IT" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_temporary.jpeg');"><div class="song-tile-inner"><span class="song-streams">250M</span><span class="song-streams-label">Streams</span><span class="song-artist">my head is empty</span><span class="song-title">i was only temporary</span></div></a>
-        <a href="https://open.spotify.com/track/5GLNE2kxoAouIaNyWvam80" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_dontstop.jpeg');"><div class="song-tile-inner"><span class="song-streams">100M</span><span class="song-streams-label">Streams</span><span class="song-artist">GLXXMSTRIDER</span><span class="song-title">DON'T STOP</span></div></a>
-        <a href="https://open.spotify.com/track/2S5EpxS6WhQkBlj3WJYXFJ" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_eeyuh.jpeg');"><div class="song-tile-inner"><span class="song-streams">40M</span><span class="song-streams-label">Streams</span><span class="song-artist">HR</span><span class="song-title">EEYUH!</span></div></a>
+        <a href="https://open.spotify.com/track/2CIlKt4lRwAAUx5fYgCBxN" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_ecstacy.jpeg');"><div class="song-tile-inner"><span class="song-streams">719M</span><span class="song-streams-label">Streams</span><span class="song-artist">SUICIDAL-IDOL</span><span class="song-title">ecstacy</span></div></a>
+        <a href="https://open.spotify.com/track/0X4YYZtZcvqNqYIpMd93IT" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_temporary.jpeg');"><div class="song-tile-inner"><span class="song-streams">365M</span><span class="song-streams-label">Streams</span><span class="song-artist">my head is empty</span><span class="song-title">i was only temporary</span></div></a>
+        <a href="https://open.spotify.com/track/1lb3H41lbvAN28N7yqRNL9" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_idea10.jpeg');"><div class="song-tile-inner"><span class="song-streams">334M</span><span class="song-streams-label">Streams</span><span class="song-artist">Gibran Alcocer</span><span class="song-title">Idea 10</span></div></a>
+        <a href="https://open.spotify.com/track/4hjRjhLvBIMUUhRjb7DACd" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_vyrval.jpeg');"><div class="song-tile-inner"><span class="song-streams">232M</span><span class="song-streams-label">Streams</span><span class="song-artist">vyrval</span><span class="song-title">✻H+3+ЯД✻7luCJIo0T6...</span></div></a>
+        <a href="https://open.spotify.com/track/2S5EpxS6WhQkBlj3WJYXFJ" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_eeyuh.jpeg');"><div class="song-tile-inner"><span class="song-streams">168M</span><span class="song-streams-label">Streams</span><span class="song-artist">HR</span><span class="song-title">EEYUH!</span></div></a>
+        <a href="https://open.spotify.com/track/5GLNE2kxoAouIaNyWvam80" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_dontstop.jpeg');"><div class="song-tile-inner"><span class="song-streams">159M</span><span class="song-streams-label">Streams</span><span class="song-artist">GLXXMSTRIDER</span><span class="song-title">DON'T STOP</span></div></a>
+        <a href="https://open.spotify.com/track/6Q06JnZvvGpivyuLdD404e" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_solitude.jpeg');"><div class="song-tile-inner"><span class="song-streams">54M</span><span class="song-streams-label">Streams</span><span class="song-artist">juno, blindheart</span><span class="song-title">Solitude</span></div></a>
+        <a href="https://open.spotify.com/track/6e1079QKt7GGlJyyP8cO1u" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_findamelody.jpeg');"><div class="song-tile-inner"><span class="song-streams">35M</span><span class="song-streams-label">Streams</span><span class="song-artist">Andrea Vanzo</span><span class="song-title">Find a Melody</span></div></a>
+        <a href="https://open.spotify.com/track/6o3RzW888Fz2YBtzPtROiD" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_drowning.jpeg');"><div class="song-tile-inner"><span class="song-streams">32M</span><span class="song-streams-label">Streams</span><span class="song-artist">Antent, vowl.</span><span class="song-title">drowning</span></div></a>
         <a href="https://open.spotify.com/track/1KoWiQGR2ry2N1NvAN5r0M" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_sundown.jpeg');"><div class="song-tile-inner"><span class="song-streams">28M</span><span class="song-streams-label">Streams</span><span class="song-artist">$undown</span><span class="song-title">Stray.wav</span></div></a>
-        <a href="https://open.spotify.com/track/6Q06JnZvvGpivyuLdD404e" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_solitude.jpeg');"><div class="song-tile-inner"><span class="song-streams">25M</span><span class="song-streams-label">Streams</span><span class="song-artist">juno, blindheart</span><span class="song-title">Solitude</span></div></a>
         <a href="https://open.spotify.com/track/2aRjdfibMVQyl5iw9epBGt" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_bleach.jpeg');"><div class="song-tile-inner"><span class="song-streams">23M</span><span class="song-streams-label">Streams</span><span class="song-artist">Vandalism</span><span class="song-title">bleach</span></div></a>
-        <a href="https://open.spotify.com/track/6o3RzW888Fz2YBtzPtROiD" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_drowning.jpeg');"><div class="song-tile-inner"><span class="song-streams">20M</span><span class="song-streams-label">Streams</span><span class="song-artist">Antent, vowl.</span><span class="song-title">drowning</span></div></a>
-        <a href="https://open.spotify.com/track/6e1079QKt7GGlJyyP8cO1u" target="_blank" rel="noopener" class="song-tile" style="background-image: url('assets/song_findamelody.jpeg');"><div class="song-tile-inner"><span class="song-streams">13M</span><span class="song-streams-label">Streams</span><span class="song-artist">Andrea Vanzo</span><span class="song-title">Find a Melody</span></div></a>
         <div class="song-tile songs-more">and many more&hellip;</div>
       </div>
     </div>
@@ -940,7 +938,7 @@
 
       <div class="wwd-content">
         <ul class="wwd-list">
-          <li>Engineered social campaigns targeting 100M+ views per release across TikTok, Reels, and Shorts</li>
+          <li>Engineered social campaigns built for cultural scale across TikTok, Reels, and Shorts</li>
           <li>In-house content creation paired with a UGC strategy built around your sound</li>
           <li>Pre-release sound injection to test content and ensure a strong song launch</li>
           <li>Real-time campaign optimisation, we monitor and adapt as trends shift on your music</li>
