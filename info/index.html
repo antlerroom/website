@@ -181,38 +181,18 @@
     }
 
     /* ========== DEAL PHILOSOPHY ========== */
-    .deal-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 30px;
-      margin-top: 40px;
-    }
-    .deal-card {
-      border: 1px solid rgba(201,169,110,0.2);
-      padding: 30px;
+    .deal-statement {
+      margin-top: 36px;
       text-align: center;
-    }
-    .deal-card .deal-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--gold);
-      display: block;
-      margin-bottom: 8px;
-    }
-    .deal-card .deal-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-    }
-    .deal-note {
-      text-align: center;
-      margin-top: 30px;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      color: var(--text);
       font-style: italic;
+      font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+      line-height: 1.5;
+      color: var(--text);
+      letter-spacing: 0.01em;
     }
+    .deal-statement span { display: block; }
+    .deal-statement span:last-child { color: var(--gold); }
 
     /* ========== CASE STUDIES ========== */
     .case-label {
@@ -804,17 +784,11 @@
     <div class="container fade-in">
       <h2 class="section-heading">Deal Philosophy</h2>
 
-      <div class="deal-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); max-width: 820px; margin-left: auto; margin-right: auto; margin-top: 50px;">
-        <div class="deal-card">
-          <span class="deal-value" style="font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;">Artist-First Splits</span>
-        </div>
-        <div class="deal-card">
-          <span class="deal-value" style="font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;">Better Contracts</span>
-        </div>
-        <div class="deal-card">
-          <span class="deal-value" style="font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;">Record by Record</span>
-        </div>
-      </div>
+      <p class="deal-statement">
+        <span>Artist-first splits.</span>
+        <span>Better contracts.</span>
+        <span>Record by record.</span>
+      </p>
     </div>
   </section>
 
