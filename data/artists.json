@@ -1,5 +1,5 @@
 {
-  "_notes": "Monthly listeners read from the live Spotify artist pages, 25 Oct 2026. Cards: name, monthly listeners, genre, link to Spotify. previously_worked_with: 'role' (what we did, e.g. Development, Management, Label), optional 'highlight' (one line under the card) and 'work' (results shown on hover). A roster artist with lane null is shown in the roster but not in any lane card.",
+  "_notes": "Monthly listeners read from the live Spotify artist pages, 25 Oct 2026. Cards: name, monthly listeners, genre, link to Spotify. A roster artist with lane null is shown in the roster but not in any lane card.",
   "updated": "2026-10-26",
   "lanes": [
     {
@@ -138,42 +138,20 @@
     {
       "name": "Øneheart",
       "genre": "Ambient",
-      "role": [
-        "Development",
-        "Management",
-        "Label"
-      ],
       "monthly_listeners": 5300000,
       "listeners_display": "5.3M",
-      "spotify": "https://open.spotify.com/artist/0dgJbQ0bKPyUXco8hEXN7X",
-      "highlight": "Double Platinum RIAA · 1.6B streams on “snowfall”",
-      "work": [
-        "Most-streamed ambient artist on the planet",
-        "1.6B streams on “snowfall”",
-        "Double Platinum RIAA",
-        "2B weekly social views"
-      ]
+      "spotify": "https://open.spotify.com/artist/0dgJbQ0bKPyUXco8hEXN7X"
     },
     {
       "name": "Gibran Alcocer",
       "genre": "Neo-classical",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 5100000,
       "listeners_display": "5.1M",
-      "spotify": "https://open.spotify.com/artist/5nWYvcpaqKtp08cYxjOfFr",
-      "highlight": "334M streams on “Idea 10”",
-      "work": [
-        "“Idea 10”: 334M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/5nWYvcpaqKtp08cYxjOfFr"
     },
     {
       "name": "Sidewalks and Skeletons",
       "genre": "Witch House",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 5000000,
       "listeners_display": "5M",
       "spotify": "https://open.spotify.com/artist/48nHO1cuTbpx4ELhChsxX1"
@@ -181,69 +159,34 @@
     {
       "name": "SUICIDAL-IDOL",
       "genre": "Witch House",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 3100000,
       "listeners_display": "3.1M",
-      "spotify": "https://open.spotify.com/artist/6KOszWgIriJLaPOySuBOTI",
-      "highlight": "719M streams on “ecstacy”",
-      "work": [
-        "“ecstacy”: 719M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/6KOszWgIriJLaPOySuBOTI"
     },
     {
       "name": "Flawed Mangoes",
       "genre": "Guitar",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 3000000,
       "listeners_display": "3M",
-      "spotify": "https://open.spotify.com/artist/4MrQDA45Gd0llLrwFUzimG",
-      "highlight": "10B social views",
-      "work": [
-        "World-leading viral guitar artist",
-        "174M streams on “Killswitch Lullaby”",
-        "10B social views"
-      ]
+      "spotify": "https://open.spotify.com/artist/4MrQDA45Gd0llLrwFUzimG"
     },
     {
       "name": "Andrea Vanzo",
       "genre": "Neo-classical",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 2800000,
       "listeners_display": "2.8M",
-      "spotify": "https://open.spotify.com/artist/4KiO59dzeB8dACXmrrwkKe",
-      "highlight": "35M streams on “Find a Melody”",
-      "work": [
-        "“Find a Melody”: 35M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/4KiO59dzeB8dACXmrrwkKe"
     },
     {
       "name": "Cult Member",
       "genre": "Outsider House",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 2600000,
       "listeners_display": "2.6M",
-      "spotify": "https://open.spotify.com/artist/1pR1W2iWfLwtMK776UeIcF",
-      "highlight": "Album “2017 Archives” · 45M+ streams",
-      "work": [
-        "Internet music icon",
-        "45M+ streams on the album “2017 Archives”",
-        "416M social views"
-      ]
+      "spotify": "https://open.spotify.com/artist/1pR1W2iWfLwtMK776UeIcF"
     },
     {
       "name": "Old Jim",
       "genre": "Dance",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 2200000,
       "listeners_display": "2.2M",
       "spotify": "https://open.spotify.com/artist/6v2YWK8EvCyut0QtBcAypu"
@@ -251,69 +194,34 @@
     {
       "name": ".diedlonely",
       "genre": "Ambient",
-      "role": [
-        "Management",
-        "Label"
-      ],
       "monthly_listeners": 2100000,
       "listeners_display": "2.1M",
-      "spotify": "https://open.spotify.com/artist/2LbjW13j6rNtFgYcPjR2ur",
-      "highlight": "75.6B social views",
-      "work": [
-        "Leading TikTok ambient viral artist",
-        "178M streams on “stellar”",
-        "2M UGC videos",
-        "75.6B social views"
-      ]
+      "spotify": "https://open.spotify.com/artist/2LbjW13j6rNtFgYcPjR2ur"
     },
     {
       "name": "HR",
       "genre": "Phonk",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 1800000,
       "listeners_display": "1.8M",
-      "spotify": "https://open.spotify.com/artist/3UrGictkKDBfGKpK2ZiWGX",
-      "highlight": "168M streams on “EEYUH!”",
-      "work": [
-        "“EEYUH!”: 168M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/3UrGictkKDBfGKpK2ZiWGX"
     },
     {
       "name": "juno",
       "genre": "Ambient",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 1500000,
       "listeners_display": "1.5M",
-      "spotify": "https://open.spotify.com/artist/7BL9UhIyCdF12GbmLZAx1A",
-      "highlight": "54M streams on “Solitude”",
-      "work": [
-        "“Solitude” with blindheart: 54M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/7BL9UhIyCdF12GbmLZAx1A"
     },
     {
       "name": "Antent",
       "genre": "Ambient",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 1400000,
       "listeners_display": "1.4M",
-      "spotify": "https://open.spotify.com/artist/6ovctVkv7d2fBdilDRYfDW",
-      "highlight": "32M streams on “drowning”",
-      "work": [
-        "“drowning” with vowl.: 32M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/6ovctVkv7d2fBdilDRYfDW"
     },
     {
       "name": "Sace",
       "genre": "Dance",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 1300000,
       "listeners_display": "1.3M",
       "spotify": "https://open.spotify.com/artist/7reSsIosg88LaPnn8KKlJA"
@@ -321,65 +229,34 @@
     {
       "name": "$undown",
       "genre": "Electronic",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 1100000,
       "listeners_display": "1.1M",
-      "spotify": "https://open.spotify.com/artist/63sUDHUqfA3nnI6cObrFsd",
-      "highlight": "28M streams on “Stray.wav”",
-      "work": [
-        "“Stray.wav”: 28M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/63sUDHUqfA3nnI6cObrFsd"
     },
     {
       "name": "blindheart",
       "genre": "Ambient",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 993400,
       "listeners_display": "993.4K",
-      "spotify": "https://open.spotify.com/artist/1LA1ohBPhSnHuyogF5Da03",
-      "highlight": "54M streams on “Solitude”",
-      "work": [
-        "“Solitude” with juno: 54M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/1LA1ohBPhSnHuyogF5Da03"
     },
     {
       "name": "vowl.",
       "genre": "Electronic",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 908500,
       "listeners_display": "908.5K",
-      "spotify": "https://open.spotify.com/artist/5Q0sv5SeMZln6szEW49dHL",
-      "highlight": "32M streams on “drowning”",
-      "work": [
-        "“drowning” with Antent: 32M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/5Q0sv5SeMZln6szEW49dHL"
     },
     {
       "name": "GLXXMSTRIDER",
       "genre": "Baile Funk",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 881400,
       "listeners_display": "881.4K",
-      "spotify": "https://open.spotify.com/artist/5Vd9shhZpzTYaaZ6KQNnjU",
-      "highlight": "159M streams on “DON'T STOP”",
-      "work": [
-        "“DON'T STOP”: 159M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/5Vd9shhZpzTYaaZ6KQNnjU"
     },
     {
       "name": "Conrad Taylor",
       "genre": "Techno",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 880800,
       "listeners_display": "880.8K",
       "spotify": "https://open.spotify.com/artist/2xycbnmcCACddcAnOanEnw"
@@ -387,23 +264,13 @@
     {
       "name": "vyrval",
       "genre": "Phonk",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 866400,
       "listeners_display": "866.4K",
-      "spotify": "https://open.spotify.com/artist/4hJrxZPQydibSnMMq7PpB9",
-      "highlight": "232M streams on “✻H+3+ЯД✻…”",
-      "work": [
-        "“✻H+3+ЯД✻7luCJIo0T6...”: 232M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/4hJrxZPQydibSnMMq7PpB9"
     },
     {
       "name": "Caleb Arredondo",
       "genre": "Neo-classical",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 854000,
       "listeners_display": "854K",
       "spotify": "https://open.spotify.com/artist/48X3AlBcfBle0OsLFRIOrl"
@@ -411,9 +278,6 @@
     {
       "name": "FutureVille",
       "genre": "Ambient",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 651200,
       "listeners_display": "651.2K",
       "spotify": "https://open.spotify.com/artist/5YYDG8J9TC7S9FHyy9qgSE"
@@ -421,9 +285,6 @@
     {
       "name": "Valentino",
       "genre": "House",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 482900,
       "listeners_display": "482.9K",
       "spotify": "https://open.spotify.com/artist/3wahfqLrbSHbC1kK8CUVz2"
@@ -431,23 +292,13 @@
     {
       "name": "Vandalism",
       "genre": "Witch House",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 322400,
       "listeners_display": "322.4K",
-      "spotify": "https://open.spotify.com/artist/0a5IWX9GElOmd65lKSzBe0",
-      "highlight": "23M streams on “bleach”",
-      "work": [
-        "“bleach”: 23M streams"
-      ]
+      "spotify": "https://open.spotify.com/artist/0a5IWX9GElOmd65lKSzBe0"
     },
     {
       "name": "Berserk",
       "genre": "Outsider House",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 274200,
       "listeners_display": "274.2K",
       "spotify": "https://open.spotify.com/artist/1YWZSznE7QJb74sK2UgZJx"
@@ -455,9 +306,6 @@
     {
       "name": "Adi T",
       "genre": "Outsider House",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 247200,
       "listeners_display": "247.2K",
       "spotify": "https://open.spotify.com/artist/2j7LhKK7NqAGgtvDZN5LZG"
@@ -465,9 +313,6 @@
     {
       "name": "silent collision",
       "genre": "Ambient",
-      "role": [
-        "Label"
-      ],
       "monthly_listeners": 183000,
       "listeners_display": "183K",
       "spotify": "https://open.spotify.com/artist/0LLN5gLVXdG4JppMASYxNP"

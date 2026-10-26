@@ -83,30 +83,12 @@ function spotifyLink(className, href, label) {
 
 /* ---------- Cards (roster, worked with) ---------- */
 
-function workOverlay(role, work) {
-  const overlay = el('div', 'work-overlay');
-  overlay.setAttribute('aria-hidden', 'true');
-  overlay.appendChild(el('p', 'work-title', 'What we did'));
-  if (role.length) overlay.appendChild(el('p', 'work-role', role.join(' · ')));
-  if (work.length) {
-    const list = el('ul', 'work-list');
-    work.forEach(item => list.appendChild(el('li', null, item)));
-    overlay.appendChild(list);
-  }
-  return overlay;
-}
-
-function mediaCard({ href, label, image, tag, name, stat, statLabel, highlight = '', role = [], work = [], feature = false, className = '' }) {
+function mediaCard({ href, label, image, tag, name, stat, statLabel, feature = false, className = '' }) {
   const card = spotifyLink(('artist-card ' + className).trim(), href, label);
   if (feature) card.classList.add('artist-card--feature');
 
   const art = el('div', 'artist-art');
   art.appendChild(image);
-  if (role.length || work.length) {
-    card.classList.add('has-work');
-    // Small cards have no room to repeat the highlight that already sits under the card.
-    art.appendChild(workOverlay(role, feature ? work : work.filter(item => item !== highlight)));
-  }
 
   const pill = el('span', 'pill genre-tag');
   pill.append(sparkleIcon(), document.createTextNode(tag));
@@ -121,7 +103,6 @@ function mediaCard({ href, label, image, tag, name, stat, statLabel, highlight =
   const stats = el('p', 'artist-listeners');
   stats.append(el('strong', null, stat), document.createTextNode(statLabel));
   meta.appendChild(stats);
-  if (highlight) meta.appendChild(el('p', 'artist-highlight', highlight));
 
   card.append(art, meta);
   return card;
@@ -138,21 +119,14 @@ const SIZES = {
 };
 
 function artistCard(artist, { feature = false, eager = false, sizes = SIZES.roster } = {}) {
-  const role = artist.role || [];
-  const work = artist.work || [];
   const card = mediaCard({
     href: artist.spotify,
-    label: `${artist.name}, ${artist.listeners_display} monthly listeners, ${artist.genre}.` +
-      (role.length ? ` What we did: ${role.join(', ')}.` : '') +
-      (work.length ? ` ${work.join('; ')}.` : '') + ' Open on Spotify',
+    label: `${artist.name}, ${artist.listeners_display} monthly listeners, ${artist.genre}. Open on Spotify`,
     image: artworkImage(artist.name, { eager, sizes }),
     tag: artist.genre,
     name: artist.name,
     stat: artist.listeners_display,
     statLabel: 'monthly listeners',
-    highlight: artist.highlight || '',
-    role,
-    work,
     feature,
   });
   if (artist.lane) card.dataset.lane = artist.lane;
@@ -200,20 +174,6 @@ function renderWorkedWith(data) {
     frag.appendChild(artistCard(artist, { feature, sizes: feature ? SIZES.workedFeature : SIZES.worked }));
   });
   grid.replaceChildren(frag);
-  observeWorkCards();
-}
-
-/* Touch screens can't hover and a tap opens Spotify, so "What we did" shows while a card crosses the middle of the screen. */
-const touchOnly = window.matchMedia('(hover: none) and (pointer: coarse)');
-let workObserver = null;
-
-function observeWorkCards() {
-  if (!touchOnly.matches || !('IntersectionObserver' in window)) return;
-  if (workObserver) workObserver.disconnect();
-  else workObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => entry.target.classList.toggle('is-revealed', entry.isIntersecting));
-  }, { rootMargin: '-45% 0px -45% 0px' });
-  document.querySelectorAll('.has-work').forEach(card => workObserver.observe(card));
 }
 
 /* ---------- Lanes ---------- */
