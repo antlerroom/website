@@ -635,6 +635,7 @@ function initReveal() {
       }
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  document.documentElement.classList.add('reveal-ready');
   items.forEach(i => io.observe(i));
 }
 
@@ -682,6 +683,7 @@ function initStats() {
     row.querySelectorAll('[data-count-to]').forEach(countUp);
     io.disconnect();
   }, { threshold: 0.5 });
+  row.classList.add('stats-ready');
   io.observe(row);
 }
 
@@ -736,12 +738,12 @@ function initMobileMenu() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadArtists();
-  initDemoForm();
-  initGrain();
-  initCursorGrain();
-  initReveal();
-  initStats();
-  initHeroVideo();
-  initMobileMenu();
+  // Each part starts on its own, so one failure can't stop the rest (or leave revealed content hidden).
+  [loadArtists, initDemoForm, initGrain, initCursorGrain, initReveal, initStats, initHeroVideo, initMobileMenu].forEach(init => {
+    try {
+      init();
+    } catch (err) {
+      console.error(`${init.name} failed`, err);
+    }
+  });
 });
