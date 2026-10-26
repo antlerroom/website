@@ -336,8 +336,7 @@ function initDemoForm() {
 
     const value = id => form.querySelector('#' + id).value.trim();
     const linkType = isSoundCloud(value('link')) ? 'SoundCloud' : 'Other';
-    // Keys match the existing Apps Script sheet columns. linkType and rightsConfirmed are new, so they are
-    // also written into notes until the script has columns for them.
+    // Keys are read by apps-script/demos.gs, which writes them to the Releases_DB "Demos" tab.
     const payload = {
       artistName: value('artist-name'),
       email: value('email'),
@@ -346,7 +345,7 @@ function initDemoForm() {
       listenLink: value('link'),
       linkType,
       genres: form.querySelector('input[name="genre"]:checked').value,
-      notes: [value('info'), `[Link: ${linkType}] [Rights confirmed: Yes]`].filter(Boolean).join('\n'),
+      notes: value('info'),
       rightsConfirmed: 'Yes',
       _timeSpent: Math.round(timeSpent / 1000)
     };
