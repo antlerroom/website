@@ -876,11 +876,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   transition: border-color 0.35s ease, transform 0.45s cubic-bezier(.2,.7,.2,1);
 }
 .partner-card:hover { border-color: rgba(197, 160, 89, 0.6); transform: translateY(-4px); }
-/* Both logos ship on black; screen blending drops the black so only the wordmark shows. */
-.partner-logo { height: clamp(110px, 13vw, 140px); width: 100%; display: grid; place-items: center; overflow: hidden; }
-.partner-logo img { max-width: none; mix-blend-mode: screen; filter: contrast(1.35); }
-.partner-logo--downtown img { width: clamp(240px, 28vw, 300px); }
-.partner-logo--soundon img { width: clamp(190px, 22vw, 230px); }
+.partner-logo { height: clamp(100px, 11vw, 122px); padding-top: 14px; width: 100%; display: grid; place-items: center; }
+.partner-logo img { width: auto; max-width: 100%; }
+.partner-logo--downtown img { height: clamp(46px, 5.4vw, 58px); }
+.partner-logo--soundon img { height: clamp(30px, 3.5vw, 38px); }
 .partner-desc { max-width: 340px; font-size: 0.82rem; line-height: 1.55; color: var(--muted); }
 @media (max-width: 640px) { .partners-row { grid-template-columns: 1fr; } }
 
