@@ -1,27 +1,6 @@
 {
-  "_notes": "Monthly listeners read from the live Spotify artist pages, 25 Oct 2026. Cards: name, monthly listeners, genre, link to Spotify. previously_worked_with: 'role' (what we did, e.g. Development, Management, Label), optional 'highlight' (one line under the card) and 'work' (results shown on hover). team_stats: the records listed on the back of the 10B+ / 1T+ cards when they are tapped. A roster artist with lane null is shown in the roster but not in any lane card.",
+  "_notes": "Monthly listeners read from the live Spotify artist pages, 25 Oct 2026. Cards: name, monthly listeners, genre, link to Spotify. previously_worked_with: 'role' (what we did, e.g. Development, Management, Label), optional 'highlight' (one line under the card) and 'work' (results shown on hover). A roster artist with lane null is shown in the roster but not in any lane card.",
   "updated": "2026-10-26",
-  "team_stats": {
-    "streams": {
-      "title": "Biggest records",
-      "items": [
-        { "artist": "Øneheart", "detail": "“snowfall”", "display": "1.6B" },
-        { "artist": "SUICIDAL-IDOL", "detail": "“ecstacy”", "display": "719M" },
-        { "artist": "Gibran Alcocer", "detail": "“Idea 10”", "display": "334M" },
-        { "artist": ".diedlonely", "detail": "“stellar”", "display": "178M" },
-        { "artist": "Flawed Mangoes", "detail": "“Killswitch Lullaby”", "display": "174M" }
-      ]
-    },
-    "social_views": {
-      "title": "Biggest campaigns",
-      "items": [
-        { "artist": ".diedlonely", "detail": "2M UGC videos", "display": "75.6B" },
-        { "artist": "Flawed Mangoes", "detail": "Viral guitar", "display": "10B" },
-        { "artist": "Øneheart", "detail": "Every week", "display": "2B" },
-        { "artist": "Cult Member", "detail": "“2017 Archives”", "display": "416M" }
-      ]
-    }
-  },
   "lanes": [
     {
       "id": "outsider-house",

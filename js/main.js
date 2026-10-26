@@ -1,11 +1,12 @@
 /**
- * Antler Room redesign mock-up.
- * Renders artists from ../data/artists.json, runs the demo form in console-only mode,
+ * Antler Room site.
+ * Renders artists from data/artists.json, submits the demo form to the Apps Script sheet,
  * and drives grain and motion with a low-power fallback.
  */
 
 const DATA_URL = 'data/artists.json';
 const ARTWORK_DIR = 'media/artists/';
+const DEMO_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxmDetg6t8XmPSMe3ZfWnfJfApcC-QWVOJCUyZ8WR1NMaUeuQFaaFBVjX48MmEziB1D/exec';
 
 const params = new URLSearchParams(location.search);
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -73,7 +74,7 @@ function artworkImage(name, { eager = false, sizes = '320px' } = {}) {
 
 function spotifyLink(className, href, label) {
   const a = el('a', className);
-  a.href = href;
+  if (/^https:\/\//.test(href)) a.href = href;
   a.target = '_blank';
   a.rel = 'noopener';
   a.setAttribute('aria-label', label);
@@ -133,7 +134,6 @@ const SIZES = {
   workedFeature: '(max-width: 700px) calc(100vw - 40px), (max-width: 1199px) calc(50vw - 40px), 308px',
   laneTile: '(max-width: 700px) 29vw, 110px',
   laneSolo: '(max-width: 700px) 58vw, 220px',
-  thumb: '34px',
 };
 
 function artistCard(artist, { feature = false, eager = false, sizes = SIZES.roster } = {}) {
@@ -256,19 +256,18 @@ async function loadArtists() {
     renderWorkedWith(data);
     wideWorkedGrid.addEventListener('change', () => renderWorkedWith(data));
     renderLanes(data);
-    renderStatBacks(data);
   } catch (err) {
-    console.error('[mock-up] Could not load artists.json', err);
+    console.error('Could not load artists.json', err);
     const status = document.querySelector('#roster-grid .data-status');
     if (status) {
       status.textContent = location.protocol === 'file:'
-        ? 'Artists load from data/artists.json, which browsers block on file:// pages. Run "python3 -m http.server 8000" in the repo folder and open http://localhost:8000/mockup/.'
-        : 'Could not load data/artists.json.';
+        ? 'Artists load from data/artists.json, which browsers block on file:// pages. Run "python3 -m http.server 8000" in the repo folder and open http://localhost:8000/.'
+        : 'Could not load the artists. Please refresh the page.';
     }
   }
 }
 
-/* ---------- Demo form (mock-up: never submits) ---------- */
+/* ---------- Demo form ---------- */
 
 function initDemoForm() {
   const form = document.querySelector('.demo-form');
@@ -305,19 +304,22 @@ function initDemoForm() {
     });
   });
 
-  form.addEventListener('submit', e => {
+  const status = form.querySelector('.form-status');
+  const submitBtn = form.querySelector('.form-submit');
+
+  form.addEventListener('submit', async e => {
     e.preventDefault();
+    if (submitBtn.disabled) return;
+    status.hidden = true;
 
     const honeypot = form.querySelector('#website');
     if (honeypot && honeypot.value !== '') {
-      console.warn('[mock-up] Honeypot filled: bot path, fake success shown, nothing logged as a submission.');
       showSuccess(form);
       return;
     }
 
     const timeSpent = Date.now() - formLoadTime;
     if (timeSpent < minSubmitTime) {
-      console.warn(`[mock-up] Submitted after ${timeSpent}ms (< ${minSubmitTime}ms): bot path, fake success shown.`);
       showSuccess(form);
       return;
     }
@@ -333,21 +335,42 @@ function initDemoForm() {
     }
 
     const value = id => form.querySelector('#' + id).value.trim();
-    // Same keys as the live form's Apps Script (sheet columns); linkType and rightsConfirmed are new columns.
+    const linkType = isSoundCloud(value('link')) ? 'SoundCloud' : 'Other';
+    // Keys match the existing Apps Script sheet columns. linkType and rightsConfirmed are new, so they are
+    // also written into notes until the script has columns for them.
     const payload = {
       artistName: value('artist-name'),
       email: value('email'),
       releaseName: value('song-name'),
+      releaseType: 'Song',
       listenLink: value('link'),
-      linkType: isSoundCloud(value('link')) ? 'SoundCloud' : 'Other',
+      linkType,
       genres: form.querySelector('input[name="genre"]:checked').value,
-      notes: value('info'),
-      rightsConfirmed: rights.checked ? 'Yes' : 'No',
+      notes: [value('info'), `[Link: ${linkType}] [Rights confirmed: Yes]`].filter(Boolean).join('\n'),
+      rightsConfirmed: 'Yes',
       _timeSpent: Math.round(timeSpent / 1000)
     };
 
-    console.log('[mock-up] Demo form payload (NOT sent anywhere):', payload);
-    showSuccess(form, payload);
+    const label = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+    try {
+      // no-cors: Apps Script doesn't send CORS headers, so the response is opaque; a network failure still throws.
+      await fetch(DEMO_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(payload).toString()
+      });
+      showSuccess(form, payload);
+    } catch (err) {
+      console.error('Demo submission failed', err);
+      status.textContent = 'Something went wrong sending your demo. Please check your connection and try again.';
+      status.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = label;
+    }
   });
 }
 
@@ -641,44 +664,8 @@ function initReveal() {
   items.forEach(i => io.observe(i));
 }
 
-/* Back of each stat card: the records behind the number, from team_stats in artists.json. */
-function renderStatBacks(data) {
-  const stats = data.team_stats || {};
-  document.querySelectorAll('.stat[data-stat]').forEach(card => {
-    const stat = stats[card.dataset.stat];
-    const back = card.querySelector('.stat-back');
-    if (!stat || !back) return;
-
-    const head = el('div', 'stat-back-head');
-    head.append(
-      el('p', 'stat-back-title', stat.title),
-      el('p', 'stat-back-total', card.querySelector('.stat-number').textContent + ' ' + card.querySelector('.stat-label').textContent)
-    );
-    const list = el('ol', 'stat-list');
-    stat.items.forEach((item, i) => {
-      const li = el('li', 'stat-item');
-      li.style.setProperty('--i', i);
-      const name = el('span', 'stat-item-name', item.artist);
-      name.appendChild(el('small', null, item.detail));
-      li.append(artworkImage(item.artist, { sizes: SIZES.thumb }), name, el('span', 'stat-item-value', item.display));
-      list.appendChild(li);
-    });
-    back.replaceChildren(head, list);
-  });
-}
-
-function initStatCards() {
-  document.querySelectorAll('.stat[data-stat]').forEach(card => {
-    const toggle = card.querySelector('.stat-toggle');
-    const back = card.querySelector('.stat-back');
-    back.setAttribute('aria-hidden', 'true');
-    toggle.addEventListener('click', () => {
-      const flipped = card.classList.toggle('is-flipped');
-      toggle.setAttribute('aria-expanded', String(flipped));
-      back.setAttribute('aria-hidden', String(!flipped));
-      // Flipping before the count-up has run would hide it, so finish it now.
-      card.closest('.stats-row').classList.add('is-counted');
-    });
+function initStatSpotlight() {
+  document.querySelectorAll('.stat').forEach(card => {
     card.addEventListener('pointermove', e => {
       const r = card.getBoundingClientRect();
       card.style.setProperty('--mx', `${e.clientX - r.left}px`);
@@ -690,7 +677,7 @@ function initStatCards() {
 function initStats() {
   const row = document.querySelector('.stats-row');
   if (!row) return;
-  initStatCards();
+  initStatSpotlight();
   if (reducedMotion || !('IntersectionObserver' in window)) {
     row.classList.add('is-counted');
     return;
@@ -717,7 +704,6 @@ function initStats() {
 
   const io = new IntersectionObserver(([entry]) => {
     if (!entry.isIntersecting) return;
-    if (row.classList.contains('is-counted')) return io.disconnect();
     row.classList.add('is-counted');
     row.querySelectorAll('[data-count-to]').forEach(countUp);
     io.disconnect();

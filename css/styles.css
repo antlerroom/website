@@ -1,4 +1,4 @@
-/* Antler Room redesign mock-up */
+/* Antler Room */
 
 /* Self-hosted variable fonts (Google Fonts latin subset). Other scripts fall back to system fonts. */
 @font-face {
@@ -296,6 +296,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero-title { display: inline-flex; align-items: baseline; gap: 0.15em; line-height: 1; }
 .hero-title-antler { font-weight: 800; font-size: clamp(2.6rem, 8vw, 5rem); letter-spacing: 0.06em; color: var(--white); }
 .hero-title-room { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: clamp(2.9rem, 9vw, 5.6rem); color: var(--gold); }
+@media (max-width: 360px) {
+  .hero-title-antler { font-size: 2.2rem; }
+  .hero-title-room { font-size: 2.5rem; }
+}
 .hero-line {
   margin-top: 14px;
   font-size: clamp(0.72rem, 1.6vw, 0.85rem);
@@ -597,6 +601,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .form-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
 
 .form-submit { margin-top: 26px; min-height: 54px; font-size: 0.82rem; }
+.form-submit:disabled { opacity: 0.7; cursor: progress; }
+.form-status { margin-top: 18px; font-size: 0.85rem; text-align: center; color: var(--error); }
+.form-status + .form-submit { margin-top: 12px; }
 
 .form-success { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding: clamp(12px, 3vw, 28px) 0; }
 .form-success-grain { position: absolute; top: -10px; left: 50%; width: 260px; height: 150px; transform: translateX(-50%); pointer-events: none; }
@@ -619,18 +626,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .section--stats { padding: clamp(28px, 4vw, 48px) 0 clamp(36px, 5vw, 60px); text-align: center; }
 .stats-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2.4vw, 28px); max-width: 860px; margin: 0 auto; }
-/* Flip card: both faces share one grid cell, so the card is as tall as the taller face. */
 .stat {
-  position: relative;
-  display: grid;
-  perspective: 1400px;
-  transition: transform 0.35s cubic-bezier(.2,.7,.2,1);
-}
-.stat-face {
-  grid-area: 1 / 1;
   position: relative;
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: clamp(24px, 4vw, 40px) 16px clamp(20px, 3vw, 30px);
   border: 1px solid rgba(197, 160, 89, 0.4);
   border-radius: 12px;
@@ -639,17 +639,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
     linear-gradient(180deg, #261E17 0%, #1A1511 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 24px 60px rgba(0, 0, 0, 0.45);
   overflow: hidden;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transition: transform 0.8s cubic-bezier(.3,.7,.2,1), border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.35s cubic-bezier(.2,.7,.2,1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.stat-front { align-items: center; justify-content: center; }
-.stat-back { transform: rotateY(180deg); padding: clamp(18px, 2.6vw, 26px) clamp(12px, 2.4vw, 26px); text-align: left; }
-.stat.is-flipped .stat-front { transform: rotateY(-180deg); }
-.stat.is-flipped .stat-back { transform: rotateY(0deg); }
-
-/* Spotlight that follows the pointer (position set in mockup.js). */
-.stat-face::after {
+/* Spotlight that follows the pointer (position set in main.js). */
+.stat::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -658,87 +651,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.stat:hover { transform: translateY(-4px); }
-.stat:hover .stat-face { border-color: rgba(217, 188, 128, 0.75); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 28px 70px rgba(0, 0, 0, 0.5), 0 0 40px rgba(197, 160, 89, 0.14); }
-.stat:hover .stat-face::after { opacity: 1; }
+.stat:hover { transform: translateY(-4px); border-color: rgba(217, 188, 128, 0.75); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 28px 70px rgba(0, 0, 0, 0.5), 0 0 40px rgba(197, 160, 89, 0.14); }
+.stat:hover::after { opacity: 1; }
 
-.stat-toggle {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border: 0;
-  border-radius: 12px;
-  background: none;
-  cursor: pointer;
-}
-.stat-toggle:focus-visible { outline-offset: 4px; }
-.no-js .stat-toggle, .no-js .stat-hint { display: none; }
-
-.stat-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.75;
-  transition: opacity 0.25s ease;
-}
-.stat-hint::after { content: '\21BB'; font-size: 0.95rem; letter-spacing: 0; transition: transform 0.5s ease; }
-.stat:hover .stat-hint { opacity: 1; }
-.stat:hover .stat-hint::after { transform: rotate(180deg); }
-
-.stat-back-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 10px; }
-.stat-back-title { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
-.stat-back-total { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-.stat-list { list-style: none; display: grid; gap: 2px; }
-.stat-item {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 0;
-  border-top: 1px solid rgba(197, 160, 89, 0.12);
-  opacity: 0;
-  transform: translateX(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-.stat.is-flipped .stat-item { opacity: 1; transform: none; transition-delay: calc(0.3s + var(--i) * 0.06s); }
-.stat-item img, .stat-item .art-placeholder { position: relative; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
-.stat-item-name { min-width: 0; font-size: 0.8rem; font-weight: 700; line-height: 1.25; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.stat-item-name small { display: block; font-size: 0.68rem; font-weight: 500; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
-.stat-item-value { font-size: 1rem; font-weight: 800; color: var(--gold-light); font-variant-numeric: tabular-nums; }
-
-.low-power .stat-face, .low-power .stat.is-flipped .stat-face { transform: none; transition: opacity 0.35s ease, border-color 0.3s ease; }
-.low-power .stat-back { opacity: 0; visibility: hidden; }
-.low-power .stat.is-flipped .stat-front { opacity: 0; visibility: hidden; }
-.low-power .stat.is-flipped .stat-back { opacity: 1; visibility: visible; }
-
-@media (max-width: 480px) {
-  .stat-hint { font-size: 0.54rem; letter-spacing: 0.1em; white-space: nowrap; }
-  .stat-back { padding: 14px 10px; }
-  .stat-back-total { display: none; }
-  .stat-item { grid-template-columns: minmax(0, 1fr) auto; gap: 6px; padding: 5px 0; }
-  .stat-item img, .stat-item .art-placeholder { display: none; }
-  .stat-item-name { font-size: 0.7rem; }
-  .stat-item-name small { font-size: 0.6rem; }
-  .stat-item-value { font-size: 0.82rem; }
-}
-
-.visually-hidden {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.stat-face::before {
+.stat::before {
   content: '';
   position: absolute;
   top: 0;
@@ -771,7 +687,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---------- Track record ---------- */
 
-/* Lead-card count is picked in mockup.js so 7 / 4 / 2 columns leave no orphan row. */
+/* Lead-card count is picked in main.js so 7 / 4 / 2 columns leave no orphan row. */
 .section--track { padding-top: 0; }
 @media (min-width: 1200px) {
   .worked-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 16px; }
@@ -865,7 +781,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 @keyframes orbit-spin { to { transform: rotate(360deg); } }
 
-@media (max-width: 760px) {
+/* The orbit's pills reach ~190px from its centre, which doesn't fit beside the copy below 900px. */
+@media (max-width: 900px) {
   .promote-layout { grid-template-columns: 1fr; }
   .orbit { width: auto; height: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
   .orbit-ring, .orbit-center { display: none; }
@@ -914,9 +831,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .lane-card:hover .lane-mosaic img { transform: scale(1.04); }
 
 .lane-card .artist-name { font-size: clamp(1rem, 1.6vw, 1.15rem); }
-.lane-artists { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 2px 0; font-size: 0.74rem; color: var(--muted); }
+.lane-artists { margin-top: 2px; display: flex; flex-wrap: wrap; align-items: center; font-size: 0.74rem; color: var(--muted); }
 .lane-artists li:not(:last-child)::after { content: '·'; margin: 0 6px; color: var(--gold); }
-.lane-artist { transition: color 0.2s ease; }
+/* Padding brings the tap target to 24px tall without changing the visual rhythm. */
+.lane-artist { display: inline-block; padding: 5px 0; line-height: 14px; transition: color 0.2s ease; }
 .lane-artist:hover, .lane-artist:focus-visible { color: var(--gold-light); }
 
 @media (min-width: 701px) and (max-width: 1024px) {

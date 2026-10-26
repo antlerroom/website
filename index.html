@@ -3,14 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antler Room | Independent Internet Record Label (mock-up)</title>
-  <meta name="description" content="Antler Room is an independent internet record label. Outsider house, ambient, UK rap, jazz house and neo-classical.">
-  <meta name="robots" content="noindex, nofollow">
+  <!-- The inline no-js script below is allowed by its hash; update the hash if that line changes. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-e2g5HkZP+fghbsY1m7moq4GopOo7zRRaAHNyQ2Q7oSI='; style-src 'self'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Antler Room | Independent Internet Record Label</title>
+  <meta name="description" content="Antler Room is an independent internet record label for outsider house, ambient, UK rap, jazz house and neo-classical. Our team has driven 10B+ streams and 1T+ social views. Send us your demo.">
+  <link rel="canonical" href="https://antlerroom.co.uk/">
   <meta name="theme-color" content="#120E0B">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23120E0B'/%3E%3Cpath d='M8 2L9.1 6.9L14 8L9.1 9.1L8 14L6.9 9.1L2 8L6.9 6.9Z' fill='%23C5A059'/%3E%3C/svg%3E">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="media/icons/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Antler Room">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:url" content="https://antlerroom.co.uk/">
+  <meta property="og:title" content="Antler Room | Independent Internet Record Label">
+  <meta property="og:description" content="Outsider house, ambient, UK rap, jazz house and neo-classical. 10B+ streams and 1T+ social views across our team's campaigns. Send us your demo.">
+  <meta property="og:image" content="https://antlerroom.co.uk/media/share/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Antler Room, Independent Internet Record Label">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Antler Room",
+    "url": "https://antlerroom.co.uk/",
+    "logo": "https://antlerroom.co.uk/media/icons/icon-512.png",
+    "description": "Independent internet record label for outsider house, ambient, UK rap, jazz house and neo-classical.",
+    "sameAs": ["https://www.instagram.com/antlerroom/", "https://www.youtube.com/@AntlerRoom"]
+  }
+  </script>
 
   <link rel="preload" href="data/artists.json" as="fetch" crossorigin>
-  <!-- Lead roster card (first artist after sorting artists.json) is the largest paint on most screens; keep in step with SIZES.rosterFeature in mockup.js. -->
+  <!-- Lead roster card (first artist after sorting artists.json) is the largest paint on most screens; keep in step with SIZES.rosterFeature in js/main.js. -->
   <link rel="preload" as="image" href="media/artists/lovi-640.webp" imagesrcset="media/artists/lovi-320.webp 320w, media/artists/lovi-640.webp 640w" imagesizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1200px) calc(50vw - 40px), 548px" fetchpriority="high">
 
   <link rel="stylesheet" href="css/styles.css">
@@ -96,7 +123,7 @@
   <header class="hero" id="top">
     <div class="hero-media" aria-hidden="true">
       <img class="hero-poster" src="media/hero/deer-wall-poster.webp" srcset="media/hero/deer-wall-poster-480.webp 854w, media/hero/deer-wall-poster.webp 1280w" sizes="100vw" width="1280" height="720" alt="" fetchpriority="high">
-      <!-- Sources are attached by mockup.js after the page has loaded, so the video never competes with first paint. -->
+      <!-- Sources are attached by js/main.js after the page has loaded, so the video never competes with first paint. -->
       <video class="hero-video" muted loop playsinline preload="none" data-src="media/hero/deer-wall-720.mp4" data-src-small="media/hero/deer-wall-480.mp4"></video>
       <div class="hero-overlay"></div>
     </div>
@@ -163,29 +190,15 @@
     <section id="stats" class="section section--stats" aria-label="Team track record in numbers">
       <div class="container">
         <div class="stats-row">
-          <div class="stat" data-stat="streams">
-            <button class="stat-toggle" type="button" aria-expanded="false" aria-controls="stat-streams-back">
-              <span class="visually-hidden">10B+ streams: show the biggest records</span>
-            </button>
-            <div class="stat-face stat-front">
-              <span class="stat-number" data-count-to="10" data-suffix="B+">10B+</span>
-              <span class="stat-label">Streams</span>
-              <span class="stat-full">10,000,000,000+</span>
-              <span class="stat-hint" aria-hidden="true">See the records</span>
-            </div>
-            <div class="stat-face stat-back" id="stat-streams-back"></div>
+          <div class="stat">
+            <span class="stat-number" data-count-to="10" data-suffix="B+">10B+</span>
+            <span class="stat-label">Streams</span>
+            <span class="stat-full">10,000,000,000+</span>
           </div>
-          <div class="stat" data-stat="social_views">
-            <button class="stat-toggle" type="button" aria-expanded="false" aria-controls="stat-social-back">
-              <span class="visually-hidden">1T+ social views: show the biggest campaigns</span>
-            </button>
-            <div class="stat-face stat-front">
-              <span class="stat-number stat-number--reveal">1T+</span>
-              <span class="stat-label">Social views</span>
-              <span class="stat-full">1,000,000,000,000+</span>
-              <span class="stat-hint" aria-hidden="true">See the campaigns</span>
-            </div>
-            <div class="stat-face stat-back" id="stat-social-back"></div>
+          <div class="stat">
+            <span class="stat-number stat-number--reveal">1T+</span>
+            <span class="stat-label">Social views</span>
+            <span class="stat-full">1,000,000,000,000+</span>
           </div>
         </div>
         <p class="stats-note">Across the campaigns our team has run.</p>
@@ -358,6 +371,7 @@
               </div>
             </div>
 
+            <p class="form-status" role="alert" hidden></p>
             <button type="submit" class="btn btn--gold btn--block form-submit">Submit demo</button>
           </form>
         </div>
