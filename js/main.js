@@ -1,966 +1,787 @@
 /**
- * Antler Room - Main JavaScript
- * Handles smooth scrolling navigation
+ * Antler Room redesign mock-up.
+ * Renders artists from ../data/artists.json, runs the demo form in console-only mode,
+ * and drives grain and motion with a low-power fallback.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-  /**
-   * Animated Background Grain
-   * Full-page canvas grain that animates subtly
-   */
-  const bgCanvas = document.createElement('canvas');
-  bgCanvas.className = 'bg-grain-canvas';
-  document.body.insertBefore(bgCanvas, document.body.firstChild);
+const DATA_URL = 'data/artists.json';
+const ARTWORK_DIR = 'media/artists/';
 
-  const bgCtx = bgCanvas.getContext('2d');
-  let grainFrame = 0;
+const params = new URLSearchParams(location.search);
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const conn = navigator.connection || {};
+const detectedLowPower =
+  reducedMotion ||
+  conn.saveData === true ||
+  (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4) ||
+  (navigator.deviceMemory > 0 && navigator.deviceMemory <= 4);
+// ?lowpower=1 / ?lowpower=0 forces either mode for reviewing.
+const lowPower = params.has('lowpower') ? params.get('lowpower') === '1' : detectedLowPower;
+document.documentElement.classList.toggle('low-power', lowPower);
 
-  const resizeBgCanvas = () => {
-    bgCanvas.width = window.innerWidth;
-    bgCanvas.height = window.innerHeight;
-  };
-  resizeBgCanvas();
-  window.addEventListener('resize', resizeBgCanvas);
+const SVG_NS = 'http://www.w3.org/2000/svg';
 
-  const renderBgGrain = () => {
-    const width = bgCanvas.width;
-    const height = bgCanvas.height;
-    const imageData = bgCtx.createImageData(width, height);
-    const data = imageData.data;
+function sparkleIcon() {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS(SVG_NS, 'use');
+  use.setAttribute('href', '#sparkle');
+  svg.appendChild(use);
+  return svg;
+}
 
-    // Animated grain with time-based seed
-    grainFrame++;
-    const seed = grainFrame * 0.1;
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text != null) node.textContent = text;
+  return node;
+}
 
-    for (let i = 0; i < data.length; i += 4) {
-      // Pseudo-random based on position and time
-      const noise = Math.random() * 255;
-      const intensity = noise * 0.15; // Subtle grain
+/** Slug rule from REDESIGN.md: lowercase, spaces to hyphens, accents removed. */
+function slugify(name) {
+  return name
+    .replace(/Ø/g, 'O').replace(/ø/g, 'o')
+    .replace(/Æ/g, 'AE').replace(/æ/g, 'ae')
+    .replace(/ß/g, 'ss')
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+}
 
-      data[i] = intensity;     // R
-      data[i + 1] = intensity * 0.9; // G (slightly warm)
-      data[i + 2] = intensity * 0.8; // B (warm tint)
-      data[i + 3] = 30;        // Alpha - very subtle
-    }
+function placeholder() {
+  const ph = el('div', 'art-placeholder');
+  ph.setAttribute('aria-hidden', 'true');
+  ph.appendChild(sparkleIcon());
+  return ph;
+}
 
-    bgCtx.putImageData(imageData, 0, 0);
-  };
+/* Source JPEGs live in media/artists/<slug>.jpg; the page only loads the WebP renditions next to them. */
+function artworkImage(name, { eager = false, sizes = '320px' } = {}) {
+  const base = ARTWORK_DIR + slugify(name);
+  const img = document.createElement('img');
+  img.alt = '';
+  img.decoding = 'async';
+  img.loading = eager ? 'eager' : 'lazy';
+  if (eager) img.fetchPriority = 'high';
+  img.sizes = sizes;
+  img.srcset = `${base}-320.webp 320w, ${base}-640.webp 640w`;
+  img.src = `${base}-640.webp`;
+  img.addEventListener('error', () => img.replaceWith(placeholder()), { once: true });
+  return img;
+}
 
-  // Animate at lower framerate for performance
-  let lastGrainTime = 0;
-  const grainInterval = 80; // ~12fps for grain animation
+function spotifyLink(className, href, label) {
+  const a = el('a', className);
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.setAttribute('aria-label', label);
+  return a;
+}
 
-  const animateBgGrain = (timestamp) => {
-    if (timestamp - lastGrainTime > grainInterval) {
-      renderBgGrain();
-      lastGrainTime = timestamp;
-    }
-    requestAnimationFrame(animateBgGrain);
-  };
+/* ---------- Cards (roster, worked with) ---------- */
 
-  // Check for reduced motion preference
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    requestAnimationFrame(animateBgGrain);
-  } else {
-    renderBgGrain(); // Just render once if reduced motion
+function workOverlay(role, work) {
+  const overlay = el('div', 'work-overlay');
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.appendChild(el('p', 'work-title', 'What we did'));
+  if (role.length) overlay.appendChild(el('p', 'work-role', role.join(' · ')));
+  if (work.length) {
+    const list = el('ul', 'work-list');
+    work.forEach(item => list.appendChild(el('li', null, item)));
+    overlay.appendChild(list);
+  }
+  return overlay;
+}
+
+function mediaCard({ href, label, image, tag, name, stat, statLabel, highlight = '', role = [], work = [], feature = false, className = '' }) {
+  const card = spotifyLink(('artist-card ' + className).trim(), href, label);
+  if (feature) card.classList.add('artist-card--feature');
+
+  const art = el('div', 'artist-art');
+  art.appendChild(image);
+  if (role.length || work.length) {
+    card.classList.add('has-work');
+    art.appendChild(workOverlay(role, work));
   }
 
-  // Smooth scroll for anchor links
-  // CSS scroll-behavior: smooth handles most cases,
-  // but this provides fallback and better control
+  const pill = el('span', 'pill genre-tag');
+  pill.append(sparkleIcon(), document.createTextNode(tag));
+  art.appendChild(pill);
 
-  const anchorLinks = document.querySelectorAll('a[href^="#"]');
+  const hint = el('span', 'spotify-hint');
+  hint.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+  art.appendChild(hint);
 
-  anchorLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
+  const meta = el('div', 'artist-meta');
+  meta.appendChild(el('h3', 'artist-name', name));
+  const stats = el('p', 'artist-listeners');
+  stats.append(el('strong', null, stat), document.createTextNode(statLabel));
+  meta.appendChild(stats);
+  if (highlight) meta.appendChild(el('p', 'artist-highlight', highlight));
 
-      // Skip if just "#" (logo link to top)
-      if (href === '#') {
-        e.preventDefault();
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        return;
-      }
+  card.append(art, meta);
+  return card;
+}
 
-      const targetElement = document.querySelector(href);
+/* Rendered widths per grid, so the browser picks the 320w or 640w artwork. */
+const SIZES = {
+  roster: '(max-width: 700px) calc(50vw - 26px), (max-width: 1200px) calc(25vw - 28px), 262px',
+  rosterFeature: '(max-width: 700px) calc(100vw - 40px), (max-width: 1200px) calc(50vw - 40px), 548px',
+  worked: '(max-width: 700px) calc(50vw - 26px), (max-width: 1199px) calc(25vw - 28px), 146px',
+  workedFeature: '(max-width: 700px) calc(100vw - 40px), (max-width: 1199px) calc(50vw - 40px), 308px',
+  laneTile: '(max-width: 700px) 29vw, 110px',
+  laneSolo: '(max-width: 700px) 58vw, 220px',
+  thumb: '34px',
+};
 
-      if (targetElement) {
-        e.preventDefault();
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    });
+function artistCard(artist, { feature = false, eager = false, sizes = SIZES.roster } = {}) {
+  const role = artist.role || [];
+  const work = artist.work || [];
+  const card = mediaCard({
+    href: artist.spotify,
+    label: `${artist.name}, ${artist.listeners_display} monthly listeners, ${artist.genre}.` +
+      (role.length ? ` What we did: ${role.join(', ')}.` : '') +
+      (work.length ? ` ${work.join('; ')}.` : '') + ' Open on Spotify',
+    image: artworkImage(artist.name, { eager, sizes }),
+    tag: artist.genre,
+    name: artist.name,
+    stat: artist.listeners_display,
+    statLabel: 'monthly listeners',
+    highlight: artist.highlight || '',
+    role,
+    work,
+    feature,
   });
+  if (artist.lane) card.dataset.lane = artist.lane;
+  return card;
+}
 
-  /**
-   * Mobile Menu Link Handling
-   * Close mobile menu when clicking a navigation link
-   */
-  const mobileMenu = document.getElementById('mobile-menu');
+function renderRoster(data) {
+  const grid = document.getElementById('roster-grid');
+  const laneOrder = new Map(data.lanes.map(l => [l.id, l.order]));
+  const roster = [...data.antler_roster].sort((a, b) =>
+    (laneOrder.get(a.lane) ?? 99) - (laneOrder.get(b.lane) ?? 99) ||
+    b.monthly_listeners - a.monthly_listeners
+  );
 
-  if (mobileMenu) {
-    const mobileLinks = mobileMenu.querySelectorAll('a');
-
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        // Close the popover when a link is clicked
-        mobileMenu.hidePopover();
-      });
-    });
-  }
-
-  /**
-   * Nav Item Grain Cloud Effect
-   * Small grain cloud that appears on hover over nav items
-   */
-  const navItems = document.querySelectorAll('.nav-links a, .logo');
-
-  navItems.forEach(item => {
-    // Create canvas for this nav item
-    const navGrainCanvas = document.createElement('canvas');
-    navGrainCanvas.className = 'nav-grain-cloud';
-    navGrainCanvas.width = 80;
-    navGrainCanvas.height = 60;
-    item.style.position = 'relative';
-    item.appendChild(navGrainCanvas);
-
-    const navCtx = navGrainCanvas.getContext('2d');
-    const particles = [];
-    const particleCount = 25;
-
-    // Initialize particles
-    for (let i = 0; i < particleCount; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 25;
-      particles.push({
-        baseX: Math.cos(angle) * distance,
-        baseY: Math.sin(angle) * distance,
-        size: Math.random() * 1.2 + 0.3,
-        alpha: Math.random() * 0.4 + 0.1,
-        driftPhaseX: Math.random() * Math.PI * 2,
-        driftPhaseY: Math.random() * Math.PI * 2,
-        driftSpeed: Math.random() * 0.8 + 0.3
-      });
-    }
-
-    let navTime = Math.random() * 100;
-    let isHovering = false;
-    let opacity = 0;
-    let animationId = null;
-
-    const animateNavGrain = () => {
-      // Fade in/out
-      if (isHovering && opacity < 1) {
-        opacity += 0.08;
-      } else if (!isHovering && opacity > 0) {
-        opacity -= 0.05;
-      }
-
-      navGrainCanvas.style.opacity = opacity;
-
-      if (opacity <= 0 && !isHovering) {
-        animationId = null;
-        return;
-      }
-
-      navCtx.clearRect(0, 0, navGrainCanvas.width, navGrainCanvas.height);
-      navTime += 0.02;
-
-      const centerX = navGrainCanvas.width / 2;
-      const centerY = navGrainCanvas.height / 2;
-
-      particles.forEach(p => {
-        const driftX = Math.sin(navTime * p.driftSpeed + p.driftPhaseX) * 8;
-        const driftY = Math.cos(navTime * p.driftSpeed + p.driftPhaseY) * 8;
-
-        const x = centerX + p.baseX + driftX;
-        const y = centerY + p.baseY + driftY;
-
-        const flicker = Math.sin(navTime * 2 + p.driftPhaseX) * 0.15 + 0.85;
-        const alpha = p.alpha * flicker;
-
-        navCtx.fillStyle = `rgba(197, 160, 89, ${alpha})`;
-        navCtx.fillRect(x, y, p.size, p.size);
-      });
-
-      animationId = requestAnimationFrame(animateNavGrain);
-    };
-
-    item.addEventListener('mouseenter', () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      isHovering = true;
-      if (!animationId) {
-        animateNavGrain();
-      }
-    });
-
-    item.addEventListener('mouseleave', () => {
-      isHovering = false;
-    });
+  const frag = document.createDocumentFragment();
+  roster.forEach((artist, i) => {
+    const feature = i === 0;
+    frag.appendChild(artistCard(artist, { feature, eager: i < 4, sizes: feature ? SIZES.rosterFeature : SIZES.roster }));
   });
+  grid.replaceChildren(frag);
+}
 
-  /**
-   * Genre "Other" Checkbox Toggle
-   * Shows/hides the custom genre input field
-   */
-  const genreOtherCheckbox = document.getElementById('genre-other-checkbox');
-  const genreOtherContainer = document.getElementById('genre-other-container');
+/* ---------- Artists our team have worked with ---------- */
 
-  if (genreOtherCheckbox && genreOtherContainer) {
-    genreOtherCheckbox.addEventListener('change', () => {
-      genreOtherContainer.style.display = genreOtherCheckbox.checked ? 'block' : 'none';
-      if (!genreOtherCheckbox.checked) {
-        document.getElementById('genre-other').value = '';
-      }
-    });
+/* Shown first, in this order; everyone else follows by monthly listeners. */
+const WORKED_PINNED = ['Øneheart', 'Cult Member'];
+
+/* 26 artists: three 2x2 lead cards fill 7 columns exactly on desktop (12 + 23 = 35 cells),
+   two fill 4 columns on tablet and 2 on mobile (8 + 24 = 32 cells). */
+const wideWorkedGrid = window.matchMedia('(min-width: 1200px)');
+
+function renderWorkedWith(data) {
+  const pinRank = name => {
+    const i = WORKED_PINNED.indexOf(name);
+    return i === -1 ? WORKED_PINNED.length : i;
+  };
+  const worked = [...data.previously_worked_with]
+    .sort((a, b) => pinRank(a.name) - pinRank(b.name) || b.monthly_listeners - a.monthly_listeners);
+  const features = wideWorkedGrid.matches ? 3 : 2;
+
+  const grid = document.getElementById('worked-grid');
+  const frag = document.createDocumentFragment();
+  worked.forEach((artist, i) => {
+    const feature = i < features;
+    frag.appendChild(artistCard(artist, { feature, sizes: feature ? SIZES.workedFeature : SIZES.worked }));
+  });
+  grid.replaceChildren(frag);
+}
+
+/* ---------- Lanes ---------- */
+
+function laneCard(lane, artists) {
+  const card = el('article', 'artist-card lane-card');
+
+  const art = el('div', 'artist-art lane-mosaic');
+  const shown = artists.slice(0, 4);
+  art.dataset.count = shown.length;
+  const sizes = shown.length === 1 ? SIZES.laneSolo : SIZES.laneTile;
+  shown.forEach(a => art.appendChild(artworkImage(a.name, { sizes })));
+
+  const n = artists.length;
+  const pill = el('span', 'pill genre-tag');
+  pill.append(sparkleIcon(), document.createTextNode(`${n} artist${n === 1 ? '' : 's'}`));
+  art.appendChild(pill);
+
+  const meta = el('div', 'artist-meta');
+  meta.appendChild(el('h3', 'artist-name', lane.name));
+  const names = el('ul', 'lane-artists');
+  artists.forEach(a => {
+    const li = el('li');
+    const link = spotifyLink('lane-artist', a.spotify, `${a.name} on Spotify`);
+    link.textContent = a.name;
+    li.appendChild(link);
+    names.appendChild(li);
+  });
+  meta.appendChild(names);
+
+  card.append(art, meta);
+  return card;
+}
+
+function renderLanes(data) {
+  const grid = document.getElementById('lane-grid');
+  if (!grid) return;
+  const frag = document.createDocumentFragment();
+  [...data.lanes].sort((a, b) => a.order - b.order).forEach(lane => {
+    const artists = data.antler_roster
+      .filter(a => a.lane === lane.id)
+      .sort((a, b) => b.monthly_listeners - a.monthly_listeners);
+    if (artists.length) frag.appendChild(laneCard(lane, artists));
+  });
+  grid.replaceChildren(frag);
+}
+
+async function loadArtists() {
+  try {
+    // Default fetch options so this reuses the <link rel="preload"> response in index.html.
+    const res = await fetch(DATA_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderRoster(data);
+    renderWorkedWith(data);
+    wideWorkedGrid.addEventListener('change', () => renderWorkedWith(data));
+    renderLanes(data);
+    renderStatBacks(data);
+  } catch (err) {
+    console.error('[mock-up] Could not load artists.json', err);
+    const status = document.querySelector('#roster-grid .data-status');
+    if (status) {
+      status.textContent = location.protocol === 'file:'
+        ? 'Artists load from data/artists.json, which browsers block on file:// pages. Run "python3 -m http.server 8000" in the repo folder and open http://localhost:8000/mockup/.'
+        : 'Could not load data/artists.json.';
+    }
   }
+}
 
-  /**
-   * Form Validation
-   * Uses HTML5 Constraint Validation API with custom error messages
-   */
+/* ---------- Demo form (mock-up: never submits) ---------- */
 
+function initDemoForm() {
   const form = document.querySelector('.demo-form');
+  if (!form) return;
 
-  if (form) {
-    const inputs = form.querySelectorAll('input:not([type="checkbox"]):not([name="website"]), select, textarea');
+  const fields = form.querySelectorAll('input:not([name="website"]):not([type="radio"]):not([type="checkbox"]), textarea');
+  const genrePicker = form.querySelector('.genre-picker');
+  genrePicker.addEventListener('change', () => validateGenre(genrePicker));
+  const rights = form.querySelector('#rights');
+  rights.addEventListener('change', () => validateCheck(rights, 'Please confirm you have the rights to this music.'));
+  const formLoadTime = Date.now();
+  const minSubmitTime = 3000;
 
-    // Anti-bot: Track form load time (bots submit too fast)
-    const formLoadTime = Date.now();
-    const minSubmitTime = 3000; // Minimum 3 seconds to fill form
+  const linkInput = form.querySelector('#link');
+  linkInput.addEventListener('blur', () => {
+    const v = linkInput.value.trim();
+    if (v && !/^[a-z][a-z0-9+.-]*:\/\//i.test(v)) linkInput.value = 'https://' + v;
+  });
+  // Any link is accepted; a non-SoundCloud link just swaps the hint for a reminder about sharing settings.
+  const linkHelp = form.querySelector('#link-help');
+  const linkHelpDefault = linkHelp.textContent;
+  const updateLinkHelp = () => {
+    const v = linkInput.value.trim();
+    const other = /^https?:\/\/[^/\s]+\.[^/\s]+/i.test(v) && !isSoundCloud(v);
+    linkHelp.textContent = other ? 'Not SoundCloud? No problem. Make sure anyone with the link can listen.' : linkHelpDefault;
+  };
+  linkInput.addEventListener('input', updateLinkHelp);
+  linkInput.addEventListener('blur', updateLinkHelp);
 
-    // Real-time validation on blur
-    inputs.forEach(input => {
-      input.addEventListener('blur', () => validateField(input));
-      input.addEventListener('input', () => {
-        // Clear error on input if previously invalid
-        if (input.classList.contains('invalid')) {
-          validateField(input);
-        }
-      });
-    });
-
-    // Submit validation and Google Sheets integration
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Anti-bot check 1: Honeypot field (bots fill hidden fields)
-      const honeypot = form.querySelector('#website');
-      if (honeypot && honeypot.value !== '') {
-        // Silently reject - show fake success to not alert bot
-        showFormSuccess();
-        return;
-      }
-
-      // Anti-bot check 2: Time-based (humans take time to fill forms)
-      const timeSpent = Date.now() - formLoadTime;
-      if (timeSpent < minSubmitTime) {
-        // Too fast - likely a bot, show fake success
-        showFormSuccess();
-        return;
-      }
-
-      let isValid = true;
-      inputs.forEach(input => {
-        if (!validateField(input)) {
-          isValid = false;
-        }
-      });
-
-      if (isValid) {
-        // Collect form data
-        const formData = {
-          artistName: form.querySelector('#artist-name').value,
-          email: form.querySelector('#email').value,
-          releaseName: form.querySelector('#release-name').value,
-          releaseType: form.querySelector('#release-type').value,
-          listenLink: form.querySelector('#listen-link').value,
-          genres: Array.from(form.querySelectorAll('input[name="genre"]:checked'))
-            .map(cb => cb.value === 'other'
-              ? form.querySelector('#genre-other').value
-              : cb.nextElementSibling.nextSibling.textContent.trim())
-            .filter(g => g)
-            .join(', '),
-          notes: form.querySelector('#notes').value || '',
-          // Anti-bot: Include time spent (for server-side verification if needed)
-          _timeSpent: Math.round(timeSpent / 1000)
-        };
-
-        // Show loading state
-        const submitBtn = form.querySelector('.form-submit');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'SUBMITTING...';
-        submitBtn.disabled = true;
-
-        try {
-          // Submit to Google Sheets using URL-encoded form data
-          const urlParams = new URLSearchParams();
-          Object.keys(formData).forEach(key => {
-            urlParams.append(key, formData[key]);
-          });
-
-          await fetch('https://script.google.com/macros/s/AKfycbxmDetg6t8XmPSMe3ZfWnfJfApcC-QWVOJCUyZ8WR1NMaUeuQFaaFBVjX48MmEziB1D/exec', {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: urlParams.toString()
-          });
-
-          // Show success (no-cors means we can't read response, but submission works)
-          showFormSuccess();
-        } catch (error) {
-          console.error('Submission error:', error);
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-          alert('There was an error submitting your demo. Please try again or email us directly.');
-        }
-      } else {
-        // Focus first invalid field
-        const firstInvalid = form.querySelector('.invalid');
-        if (firstInvalid) {
-          firstInvalid.focus();
-        }
-      }
-    });
-  }
-
-  function validateField(field) {
-    const formGroup = field.closest('.form-group');
-    const errorSpan = formGroup ? formGroup.querySelector('.form-error') : null;
-
-    // Skip validation for optional fields that are empty
-    if (!field.hasAttribute('required') && field.value === '') {
-      field.classList.remove('invalid', 'valid');
-      if (errorSpan) errorSpan.textContent = '';
-      return true;
-    }
-
-    // Reset custom validity
-    field.setCustomValidity('');
-
-    // Check native validity
-    if (!field.checkValidity()) {
-      field.classList.add('invalid');
-      field.classList.remove('valid');
-
-      if (errorSpan) {
-        // Set custom error messages
-        if (field.validity.valueMissing) {
-          errorSpan.textContent = 'This field is required.';
-        } else if (field.validity.typeMismatch) {
-          if (field.type === 'email') {
-            errorSpan.textContent = 'Please enter a valid email address.';
-          } else if (field.type === 'url') {
-            errorSpan.textContent = 'Please enter a valid URL (https://...).';
-          }
-        } else if (field.validity.patternMismatch) {
-          errorSpan.textContent = field.dataset.errorMessage || 'Invalid format.';
-        } else {
-          errorSpan.textContent = 'Please check this field.';
-        }
-      }
-
-      return false;
-    } else {
-      field.classList.remove('invalid');
-      field.classList.add('valid');
-      if (errorSpan) errorSpan.textContent = '';
-      return true;
-    }
-  }
-
-  function showFormSuccess() {
-    // Replace form with animated success message
-    const formContainer = form.parentElement;
-    form.style.display = 'none';
-
-    const successMessage = document.createElement('div');
-    successMessage.className = 'form-success';
-    successMessage.innerHTML = `
-      <div class="form-success-grain-container">
-        <canvas class="form-success-grain" width="300" height="200"></canvas>
-      </div>
-      <h3 class="form-success-title">DEMO RECEIVED</h3>
-      <p class="form-success-text">Thank you for your submission. Our team will review your music and get back to you as soon as we can.</p>
-      <p class="form-success-note">Please ensure your listen link remains active during this period.</p>
-    `;
-    formContainer.appendChild(successMessage);
-
-    // Animate grain effect
-    const grainCanvas = successMessage.querySelector('.form-success-grain');
-    const grainCtx = grainCanvas.getContext('2d');
-    const particles = [];
-    const particleCount = 80;
-
-    // Initialize particles in a burst pattern
-    for (let i = 0; i < particleCount; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 100;
-      particles.push({
-        x: grainCanvas.width / 2,
-        y: grainCanvas.height / 2,
-        targetX: grainCanvas.width / 2 + Math.cos(angle) * distance,
-        targetY: grainCanvas.height / 2 + Math.sin(angle) * distance,
-        size: Math.random() * 2 + 0.5,
-        alpha: 0,
-        targetAlpha: Math.random() * 0.5 + 0.2,
-        driftPhaseX: Math.random() * Math.PI * 2,
-        driftPhaseY: Math.random() * Math.PI * 2,
-        driftSpeed: Math.random() * 0.8 + 0.3,
-        delay: Math.random() * 30
-      });
-    }
-
-    let frame = 0;
-    let grainTime = 0;
-
-    const animateSuccessGrain = () => {
-      grainCtx.clearRect(0, 0, grainCanvas.width, grainCanvas.height);
-      frame++;
-      grainTime += 0.02;
-
-      particles.forEach(p => {
-        if (frame < p.delay) return;
-
-        // Animate to target position
-        const progress = Math.min((frame - p.delay) / 40, 1);
-        const eased = 1 - Math.pow(1 - progress, 3); // Ease out cubic
-
-        p.x += (p.targetX - p.x) * 0.08;
-        p.y += (p.targetY - p.y) * 0.08;
-        p.alpha += (p.targetAlpha - p.alpha) * 0.05;
-
-        // Add drift after initial burst
-        if (progress >= 1) {
-          const driftX = Math.sin(grainTime * p.driftSpeed + p.driftPhaseX) * 8;
-          const driftY = Math.cos(grainTime * p.driftSpeed + p.driftPhaseY) * 8;
-          p.x = p.targetX + driftX;
-          p.y = p.targetY + driftY;
-        }
-
-        const flicker = Math.sin(grainTime * 2 + p.driftPhaseX) * 0.15 + 0.85;
-        const alpha = p.alpha * flicker;
-
-        grainCtx.fillStyle = `rgba(197, 160, 89, ${alpha})`;
-        grainCtx.fillRect(p.x, p.y, p.size, p.size);
-      });
-
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        requestAnimationFrame(animateSuccessGrain);
-      }
-    };
-
-    animateSuccessGrain();
-
-    // Animate text fade-in
-    successMessage.style.opacity = '0';
-    successMessage.style.transform = 'translateY(20px)';
-    requestAnimationFrame(() => {
-      successMessage.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      successMessage.style.opacity = '1';
-      successMessage.style.transform = 'translateY(0)';
-    });
-  }
-
-  /**
-   * Card Tilt Effect
-   * Adds subtle 3D tilt to glass cards on mouse movement with smooth interpolation
-   */
-  const tiltCards = document.querySelectorAll('.strategy-pillar, .service-card, .team-card, .partner-card, .stat-item');
-
-  tiltCards.forEach(card => {
-    // Store current and target rotation for smooth interpolation
-    let currentRotateX = 0;
-    let currentRotateY = 0;
-    let currentTranslateY = 0;
-    let targetRotateX = 0;
-    let targetRotateY = 0;
-    let targetTranslateY = 0;
-    let isHovering = false;
-    let animationId = null;
-
-    const lerp = (start, end, factor) => start + (end - start) * factor;
-    const lerpFactor = 0.15; // Smoothing factor (lower = smoother but slower)
-
-    const animateTilt = () => {
-      currentRotateX = lerp(currentRotateX, targetRotateX, lerpFactor);
-      currentRotateY = lerp(currentRotateY, targetRotateY, lerpFactor);
-      currentTranslateY = lerp(currentTranslateY, targetTranslateY, lerpFactor);
-
-      card.style.transform = `perspective(1000px) rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) translateY(${currentTranslateY}px)`;
-
-      // Continue animation if not close enough to target
-      const threshold = 0.01;
-      if (Math.abs(currentRotateX - targetRotateX) > threshold ||
-          Math.abs(currentRotateY - targetRotateY) > threshold ||
-          Math.abs(currentTranslateY - targetTranslateY) > threshold) {
-        animationId = requestAnimationFrame(animateTilt);
-      } else {
-        animationId = null;
-      }
-    };
-
-    const startAnimation = () => {
-      if (!animationId) {
-        animationId = requestAnimationFrame(animateTilt);
-      }
-    };
-
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      // Reduced rotation for subtler effect
-      targetRotateX = (y - centerY) / 25;
-      targetRotateY = (centerX - x) / 25;
-      targetTranslateY = -3;
-      isHovering = true;
-
-      startAnimation();
-    });
-
-    card.addEventListener('mouseleave', () => {
-      targetRotateX = 0;
-      targetRotateY = 0;
-      targetTranslateY = 0;
-      isHovering = false;
-
-      startAnimation();
+  fields.forEach(field => {
+    field.addEventListener('blur', () => validateField(field));
+    field.addEventListener('input', () => {
+      if (field.classList.contains('invalid')) validateField(field);
     });
   });
 
-  /**
-   * Ambient Grain Effect for All Glass Cards
-   * Adds subtle animated grain texture to cards for visual depth
-   */
-  const glassCards = document.querySelectorAll('.strategy-pillar, .service-card, .team-card, .partner-card, .stat-item');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
 
-  glassCards.forEach(card => {
-    // Create canvas for ambient grain
-    const grainCanvas = document.createElement('canvas');
-    grainCanvas.className = 'card-ambient-grain';
-    grainCanvas.width = 200;
-    grainCanvas.height = 200;
-    card.style.position = 'relative';
-    card.appendChild(grainCanvas);
-
-    const grainCtx = grainCanvas.getContext('2d');
-    const particles = [];
-    const particleCount = 40;
-
-    // Initialize particles
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * grainCanvas.width,
-        y: Math.random() * grainCanvas.height,
-        size: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.3 + 0.1,
-        speedX: (Math.random() - 0.5) * 0.3,
-        speedY: (Math.random() - 0.5) * 0.3,
-        driftPhaseX: Math.random() * Math.PI * 2,
-        driftPhaseY: Math.random() * Math.PI * 2,
-        driftSpeed: Math.random() * 0.5 + 0.2
-      });
+    const honeypot = form.querySelector('#website');
+    if (honeypot && honeypot.value !== '') {
+      console.warn('[mock-up] Honeypot filled: bot path, fake success shown, nothing logged as a submission.');
+      showSuccess(form);
+      return;
     }
 
-    let cardTime = Math.random() * 100; // Random start offset for variety
+    const timeSpent = Date.now() - formLoadTime;
+    if (timeSpent < minSubmitTime) {
+      console.warn(`[mock-up] Submitted after ${timeSpent}ms (< ${minSubmitTime}ms): bot path, fake success shown.`);
+      showSuccess(form);
+      return;
+    }
 
-    const animateCardGrain = () => {
-      grainCtx.clearRect(0, 0, grainCanvas.width, grainCanvas.height);
-      cardTime += 0.016;
+    let valid = true;
+    fields.forEach(f => { if (!validateField(f)) valid = false; });
+    if (!validateGenre(genrePicker)) valid = false;
+    if (!validateCheck(rights, 'Please confirm you have the rights to this music.')) valid = false;
+    if (!valid) {
+      const first = form.querySelector('.invalid');
+      (first.matches('input, textarea') ? first : first.querySelector('input')).focus();
+      return;
+    }
 
-      particles.forEach(p => {
-        // Gentle sine-wave drift
-        const driftX = Math.sin(cardTime * p.driftSpeed + p.driftPhaseX) * 15;
-        const driftY = Math.cos(cardTime * p.driftSpeed + p.driftPhaseY) * 15;
-
-        const x = p.x + driftX;
-        const y = p.y + driftY;
-
-        // Subtle alpha flicker
-        const flicker = Math.sin(cardTime * 2 + p.driftPhaseX) * 0.1 + 0.9;
-        const alpha = p.alpha * flicker;
-
-        grainCtx.fillStyle = `rgba(197, 160, 89, ${alpha})`;
-        grainCtx.fillRect(x, y, p.size, p.size);
-      });
-
-      requestAnimationFrame(animateCardGrain);
+    const value = id => form.querySelector('#' + id).value.trim();
+    // Same keys as the live form's Apps Script (sheet columns); linkType and rightsConfirmed are new columns.
+    const payload = {
+      artistName: value('artist-name'),
+      email: value('email'),
+      releaseName: value('song-name'),
+      listenLink: value('link'),
+      linkType: isSoundCloud(value('link')) ? 'SoundCloud' : 'Other',
+      genres: form.querySelector('input[name="genre"]:checked').value,
+      notes: value('info'),
+      rightsConfirmed: rights.checked ? 'Yes' : 'No',
+      _timeSpent: Math.round(timeSpent / 1000)
     };
 
-    // Only animate if reduced motion is not preferred
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      animateCardGrain();
-    }
+    console.log('[mock-up] Demo form payload (NOT sent anywhere):', payload);
+    showSuccess(form, payload);
   });
+}
 
-  /**
-   * Mouse-Following Grain Cloud Effect
-   * Canvas-based granular texture with inertia physics
-   */
+function validateField(field) {
+  const group = field.closest('.form-group');
+  const error = group ? group.querySelector('.form-error') : null;
+
+  if (!field.required && field.value.trim() === '') {
+    field.classList.remove('invalid', 'valid');
+    if (error) error.textContent = '';
+    return true;
+  }
+
+  if (field.required && field.value.trim() === '') field.value = '';
+
+  if (field.checkValidity()) {
+    field.classList.remove('invalid');
+    field.classList.add('valid');
+    if (error) error.textContent = '';
+    return true;
+  }
+
+  field.classList.add('invalid');
+  field.classList.remove('valid');
+  if (error) {
+    const v = field.validity;
+    if (v.valueMissing) error.textContent = 'This field is required.';
+    else if (v.typeMismatch && field.type === 'email') error.textContent = 'Please enter a valid email address.';
+    else if (v.typeMismatch && field.type === 'url') error.textContent = 'Please enter a valid link (https://...).';
+    else if (v.customError) error.textContent = field.validationMessage;
+    else error.textContent = 'Please check this field.';
+  }
+  return false;
+}
+
+function isSoundCloud(url) {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, '');
+    return host === 'soundcloud.com' || host.endsWith('.soundcloud.com') || host === 'snd.sc';
+  } catch {
+    return false;
+  }
+}
+
+function validateCheck(box, message) {
+  const group = box.closest('.form-group');
+  group.classList.toggle('invalid', !box.checked);
+  group.querySelector(':scope > .form-error').textContent = box.checked ? '' : message;
+  return box.checked;
+}
+
+function validateGenre(picker) {
+  const checked = picker.querySelector('input:checked');
+  picker.classList.toggle('invalid', !checked);
+  picker.querySelector('.form-error').textContent = checked ? '' : 'Please choose a genre.';
+  return Boolean(checked);
+}
+
+function showSuccess(form, payload) {
+  const wrap = form.parentElement;
+  form.hidden = true;
+
+  const success = el('div', 'form-success');
+  success.setAttribute('role', 'status');
   const canvas = document.createElement('canvas');
-  canvas.className = 'cursor-grain-canvas';
-  canvas.width = 200;
-  canvas.height = 200;
-  document.body.appendChild(canvas);
+  canvas.className = 'form-success-grain';
+  canvas.setAttribute('aria-hidden', 'true');
+  canvas.width = 260;
+  canvas.height = 150;
+  success.append(canvas, el('h3', 'form-success-title', 'Demo received'));
+  if (payload) {
+    const recap = el('p', 'pill form-success-recap');
+    recap.append(sparkleIcon(), document.createTextNode(`${payload.artistName} · ${payload.releaseName}`));
+    success.appendChild(recap);
+  }
+  success.append(
+    el('p', 'form-success-text', 'Thank you for your submission. Our team will review your music and get back to you as soon as we can.'),
+    el('p', 'form-success-note', 'Please make sure your link stays active while we listen.')
+  );
+
+  const again = el('button', 'btn btn--ghost btn--small form-success-again', 'Send another demo');
+  again.type = 'button';
+  again.addEventListener('click', () => {
+    success.remove();
+    form.reset();
+    form.querySelectorAll('.valid, .invalid').forEach(n => n.classList.remove('valid', 'invalid'));
+    form.querySelectorAll('.form-error').forEach(n => (n.textContent = ''));
+    form.querySelector('#link').dispatchEvent(new Event('input'));
+    form.hidden = false;
+    form.querySelector('input').focus();
+  });
+  success.appendChild(again);
+
+  wrap.appendChild(success);
+  success.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
 
   const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const particles = Array.from({ length: 80 }, () => {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.random() * 90;
+    return {
+      x: cx, y: cy,
+      tx: cx + Math.cos(angle) * dist,
+      ty: cy + Math.sin(angle) * dist * 0.6,
+      size: Math.random() * 2 + 0.5,
+      alpha: 0,
+      targetAlpha: Math.random() * 0.5 + 0.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.8 + 0.3
+    };
+  });
 
-  // Inertia physics state
-  let mouseX = -300;
-  let mouseY = -300;
-  let cloudX = -300;
-  let cloudY = -300;
-  let velocityX = 0;
-  let velocityY = 0;
+  let t = 0;
+  let frames = 0;
+  const draw = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    t += 0.02;
+    frames++;
+    particles.forEach(p => {
+      p.x += (p.tx - p.x) * 0.08;
+      p.y += (p.ty - p.y) * 0.08;
+      p.alpha += (p.targetAlpha - p.alpha) * 0.05;
+      const dx = Math.sin(t * p.speed + p.phase) * 6;
+      const dy = Math.cos(t * p.speed + p.phase) * 6;
+      ctx.fillStyle = `rgba(197, 160, 89, ${p.alpha * (Math.sin(t * 2 + p.phase) * 0.15 + 0.85)})`;
+      ctx.fillRect(p.x + dx, p.y + dy, p.size, p.size);
+    });
+    // Settle after ~8s so the canvas isn't animating forever.
+    if (!lowPower && frames < 480 && !document.hidden) requestAnimationFrame(draw);
+  };
+  draw();
+  if (lowPower) for (let i = 0; i < 60; i++) draw();
+}
 
-  // Physics constants - instant following with minimal lag
-  const springStrength = 0.8;   // How strongly cloud is pulled to mouse (higher = tighter)
-  const damping = 0.6;          // Friction/drag (lower = less overshoot)
-  const maxVelocity = 50;       // Cap velocity for stability
+/* ---------- Background grain ---------- */
 
-  // Generate grain particles with smooth sine-based movement
-  const grainCount = 500;
-  const grains = [];
-  for (let i = 0; i < grainCount; i++) {
+function initGrain() {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'grain-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  // Drawn at half resolution and upscaled by CSS: chunkier film grain, a quarter of the pixels.
+  const SCALE = 0.5;
+  const TILE = 128;
+  const tiles = Array.from({ length: 4 }, () => {
+    const tile = document.createElement('canvas');
+    tile.width = tile.height = TILE;
+    const tctx = tile.getContext('2d');
+    const img = tctx.createImageData(TILE, TILE);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = Math.random() * 255;
+      img.data[i] = v;
+      img.data[i + 1] = v * 0.94;
+      img.data[i + 2] = v * 0.86;
+      img.data[i + 3] = 34;
+    }
+    tctx.putImageData(img, 0, 0);
+    return ctx.createPattern(tile, 'repeat');
+  });
+
+  let frame = 0;
+  const render = () => {
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    ctx.translate(-Math.random() * TILE, -Math.random() * TILE);
+    ctx.fillStyle = tiles[frame++ % tiles.length];
+    ctx.fillRect(0, 0, w + TILE, h + TILE);
+    ctx.restore();
+  };
+
+  const resize = () => {
+    canvas.width = Math.ceil(window.innerWidth * SCALE);
+    canvas.height = Math.ceil(window.innerHeight * SCALE);
+    render();
+  };
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  if (lowPower) return;
+
+  const INTERVAL = 80;
+  let last = 0;
+  let rafId = 0;
+  const loop = ts => {
+    if (ts - last > INTERVAL) { render(); last = ts; }
+    rafId = requestAnimationFrame(loop);
+  };
+  const start = () => { if (!rafId) rafId = requestAnimationFrame(loop); };
+  const stop = () => { cancelAnimationFrame(rafId); rafId = 0; };
+
+  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  start();
+}
+
+/* ---------- Cursor grain cloud (fine pointers only) ---------- */
+
+function initCursorGrain() {
+  if (lowPower || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'cursor-grain';
+  canvas.width = canvas.height = 200;
+  canvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  const grains = Array.from({ length: 360 }, () => {
     const angle = Math.random() * Math.PI * 2;
     const distance = Math.random() * 75;
-    grains.push({
-      baseX: Math.cos(angle) * distance,
-      baseY: Math.sin(angle) * distance,
+    return {
+      bx: Math.cos(angle) * distance,
+      by: Math.sin(angle) * distance,
       size: Math.random() * 1.5 + 0.5,
-      baseAlpha: Math.random() * 0.45 + 0.1,
-      // Smooth oscillation parameters
-      driftRadius: Math.random() * 20 + 8,
-      driftSpeedX: Math.random() * 1.5 + 0.5,
-      driftSpeedY: Math.random() * 1.5 + 0.5,
-      phaseX: Math.random() * Math.PI * 2,
-      phaseY: Math.random() * Math.PI * 2,
-      flickerSpeed: Math.random() * 2 + 1,
-      flickerPhase: Math.random() * Math.PI * 2,
-      // Individual particle inertia offset
-      inertiaWeight: Math.random() * 0.3 + 0.7
-    });
-  }
-
-  let time = 0;
-
-  function animateGrainCloud() {
-    // Apply spring physics - accelerate toward mouse position
-    const dx = mouseX - cloudX;
-    const dy = mouseY - cloudY;
-
-    velocityX += dx * springStrength;
-    velocityY += dy * springStrength;
-
-    // Apply damping (friction)
-    velocityX *= damping;
-    velocityY *= damping;
-
-    // Clamp velocity
-    velocityX = Math.max(-maxVelocity, Math.min(maxVelocity, velocityX));
-    velocityY = Math.max(-maxVelocity, Math.min(maxVelocity, velocityY));
-
-    // Update cloud position
-    cloudX += velocityX;
-    cloudY += velocityY;
-
-    // Position canvas
-    canvas.style.left = `${cloudX - canvas.width / 2}px`;
-    canvas.style.top = `${cloudY - canvas.height / 2}px`;
-
-    // Calculate velocity magnitude for particle effects
-    const speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-    const stretchFactor = Math.min(speed / 15, 1); // 0 to 1 based on movement speed
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    time += 0.016;
-
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-
-    grains.forEach(grain => {
-      // Smooth sine-wave based drift
-      const driftX = Math.sin(time * grain.driftSpeedX + grain.phaseX) * grain.driftRadius;
-      const driftY = Math.cos(time * grain.driftSpeedY + grain.phaseY) * grain.driftRadius;
-
-      // Add velocity-based offset - particles trail behind based on their inertia weight (subtle)
-      const inertiaOffsetX = -velocityX * (1 - grain.inertiaWeight) * 0.5;
-      const inertiaOffsetY = -velocityY * (1 - grain.inertiaWeight) * 0.5;
-
-      const x = centerX + grain.baseX + driftX + inertiaOffsetX;
-      const y = centerY + grain.baseY + driftY + inertiaOffsetY;
-      const dist = Math.sqrt(grain.baseX * grain.baseX + grain.baseY * grain.baseY);
-
-      // Gentle flicker - slightly more when moving fast
-      const flicker = Math.sin(time * grain.flickerSpeed + grain.flickerPhase) * (0.25 + stretchFactor * 0.1) + 0.75;
-      const fadeAlpha = grain.baseAlpha * (1 - dist / 90) * flicker;
-
-      if (fadeAlpha > 0) {
-        ctx.fillStyle = `rgba(170, 140, 100, ${fadeAlpha})`;
-        ctx.fillRect(x, y, grain.size, grain.size);
-      }
-    });
-
-    requestAnimationFrame(animateGrainCloud);
-  }
-
-  animateGrainCloud();
-
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+      alpha: Math.random() * 0.45 + 0.1,
+      r: Math.random() * 20 + 8,
+      sx: Math.random() * 1.5 + 0.5,
+      sy: Math.random() * 1.5 + 0.5,
+      px: Math.random() * Math.PI * 2,
+      py: Math.random() * Math.PI * 2,
+      fs: Math.random() * 2 + 1,
+      fp: Math.random() * Math.PI * 2,
+      w: Math.random() * 0.3 + 0.7
+    };
   });
 
-  // Respect reduced motion preference
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    tiltCards.forEach(card => {
-      card.style.transform = 'none';
+  let mx = -300, my = -300, cx = -300, cy = -300, vx = 0, vy = 0, t = 0;
+  let lastMove = 0;
+  let rafId = 0;
+
+  const tick = now => {
+    vx = Math.max(-50, Math.min(50, (vx + (mx - cx) * 0.8) * 0.6));
+    vy = Math.max(-50, Math.min(50, (vy + (my - cy) * 0.8) * 0.6));
+    cx += vx;
+    cy += vy;
+    canvas.style.transform = `translate(${cx - 100}px, ${cy - 100}px)`;
+
+    ctx.clearRect(0, 0, 200, 200);
+    t += 0.016;
+    const stretch = Math.min(Math.hypot(vx, vy) / 15, 1);
+    for (const g of grains) {
+      const x = 100 + g.bx + Math.sin(t * g.sx + g.px) * g.r - vx * (1 - g.w) * 0.5;
+      const y = 100 + g.by + Math.cos(t * g.sy + g.py) * g.r - vy * (1 - g.w) * 0.5;
+      const dist = Math.hypot(g.bx, g.by);
+      const a = g.alpha * (1 - dist / 90) * (Math.sin(t * g.fs + g.fp) * (0.25 + stretch * 0.1) + 0.75);
+      if (a > 0) {
+        ctx.fillStyle = `rgba(170, 140, 100, ${a})`;
+        ctx.fillRect(x, y, g.size, g.size);
+      }
+    }
+
+    // Idle after 2s without mouse movement so it costs nothing at rest.
+    if (now - lastMove < 2000 && !document.hidden) {
+      rafId = requestAnimationFrame(tick);
+    } else {
+      rafId = 0;
+      canvas.style.opacity = '0';
+    }
+  };
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    lastMove = performance.now();
+    canvas.style.opacity = '1';
+    if (!rafId) rafId = requestAnimationFrame(tick);
+  }, { passive: true });
+}
+
+/* ---------- Motion ---------- */
+
+function initReveal() {
+  const items = document.querySelectorAll('.fade-in');
+  if (!('IntersectionObserver' in window) || reducedMotion) {
+    items.forEach(i => i.classList.add('is-visible'));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
     });
-    canvas.style.display = 'none';
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  items.forEach(i => io.observe(i));
+}
+
+/* Back of each stat card: the records behind the number, from team_stats in artists.json. */
+function renderStatBacks(data) {
+  const stats = data.team_stats || {};
+  document.querySelectorAll('.stat[data-stat]').forEach(card => {
+    const stat = stats[card.dataset.stat];
+    const back = card.querySelector('.stat-back');
+    if (!stat || !back) return;
+
+    const head = el('div', 'stat-back-head');
+    head.append(
+      el('p', 'stat-back-title', stat.title),
+      el('p', 'stat-back-total', card.querySelector('.stat-number').textContent + ' ' + card.querySelector('.stat-label').textContent)
+    );
+    const list = el('ol', 'stat-list');
+    stat.items.forEach((item, i) => {
+      const li = el('li', 'stat-item');
+      li.style.setProperty('--i', i);
+      const name = el('span', 'stat-item-name', item.artist);
+      name.appendChild(el('small', null, item.detail));
+      li.append(artworkImage(item.artist, { sizes: SIZES.thumb }), name, el('span', 'stat-item-value', item.display));
+      list.appendChild(li);
+    });
+    back.replaceChildren(head, list);
+  });
+}
+
+function initStatCards() {
+  document.querySelectorAll('.stat[data-stat]').forEach(card => {
+    const toggle = card.querySelector('.stat-toggle');
+    const back = card.querySelector('.stat-back');
+    back.setAttribute('aria-hidden', 'true');
+    toggle.addEventListener('click', () => {
+      const flipped = card.classList.toggle('is-flipped');
+      toggle.setAttribute('aria-expanded', String(flipped));
+      back.setAttribute('aria-hidden', String(!flipped));
+      // Flipping before the count-up has run would hide it, so finish it now.
+      card.closest('.stats-row').classList.add('is-counted');
+    });
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      card.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }, { passive: true });
+  });
+}
+
+function initStats() {
+  const row = document.querySelector('.stats-row');
+  if (!row) return;
+  initStatCards();
+  if (reducedMotion || !('IntersectionObserver' in window)) {
+    row.classList.add('is-counted');
+    return;
   }
 
-  /**
-   * Stat Tile Grain Burst Effect
-   * Creates a grain particle burst when hovering over expandable stat tiles
-   */
-  const expandableStats = document.querySelectorAll('.stat-item--expandable');
-
-  expandableStats.forEach(stat => {
-    const statNumber = stat.querySelector('.stat-number');
-    if (!statNumber) return;
-
-    // Create canvas for grain burst
-    const burstCanvas = document.createElement('canvas');
-    burstCanvas.className = 'stat-grain-burst';
-    burstCanvas.width = 300;
-    burstCanvas.height = 150;
-    statNumber.appendChild(burstCanvas);
-
-    const burstCtx = burstCanvas.getContext('2d');
-    let particles = [];
-    let burstAnimationId = null;
-    let isAnimating = false;
-
-    // Create burst particles
-    const createBurst = (expanding) => {
-      particles = [];
-      const particleCount = 60;
-
-      for (let i = 0; i < particleCount; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 3 + 1;
-        const startRadius = expanding ? 0 : 80;
-
-        particles.push({
-          x: burstCanvas.width / 2,
-          y: burstCanvas.height / 2,
-          vx: Math.cos(angle) * speed * (expanding ? 1 : -0.5),
-          vy: Math.sin(angle) * speed * (expanding ? 1 : -0.5),
-          size: Math.random() * 2 + 1,
-          alpha: Math.random() * 0.6 + 0.3,
-          decay: Math.random() * 0.02 + 0.015,
-          life: 1
-        });
-      }
-    };
-
-    const animateBurst = () => {
-      burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
-
-      let stillAlive = false;
-
-      particles.forEach(p => {
-        if (p.life <= 0) return;
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.96;
-        p.vy *= 0.96;
-        p.life -= p.decay;
-
-        if (p.life > 0) {
-          stillAlive = true;
-          const alpha = p.alpha * p.life;
-          burstCtx.fillStyle = `rgba(197, 160, 89, ${alpha})`;
-          burstCtx.fillRect(p.x, p.y, p.size, p.size);
-        }
-      });
-
-      if (stillAlive) {
-        burstAnimationId = requestAnimationFrame(animateBurst);
+  const countUp = node => {
+    const target = parseFloat(node.dataset.countTo);
+    const suffix = node.dataset.suffix || '';
+    const finalText = node.textContent;
+    const duration = 1400;
+    const t0 = performance.now();
+    const step = now => {
+      const p = Math.min((now - t0) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      if (p < 1) {
+        node.textContent = Math.max(1, Math.round(target * eased)) + suffix;
+        requestAnimationFrame(step);
       } else {
-        isAnimating = false;
-        burstAnimationId = null;
+        node.textContent = finalText;
       }
     };
+    requestAnimationFrame(step);
+  };
 
-    stat.addEventListener('mouseenter', () => {
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        createBurst(true);
-        if (!isAnimating) {
-          isAnimating = true;
-          animateBurst();
-        }
-      }
-    });
+  const io = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    if (row.classList.contains('is-counted')) return io.disconnect();
+    row.classList.add('is-counted');
+    row.querySelectorAll('[data-count-to]').forEach(countUp);
+    io.disconnect();
+  }, { threshold: 0.5 });
+  io.observe(row);
+}
 
-    stat.addEventListener('mouseleave', () => {
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        createBurst(false);
-        if (!isAnimating) {
-          isAnimating = true;
-          animateBurst();
-        }
-      }
-    });
-  });
+/* The poster <img> is the first paint; the video is fetched only after the load event and fades in once playing.
+   Reduced motion, Save-Data and 2G/3G connections keep the poster only. */
+function initHeroVideo() {
+  const video = document.querySelector('.hero-video');
+  if (!video) return;
+  const slowNetwork = /^(slow-2g|2g|3g)$/.test(conn.effectiveType || '');
+  if (reducedMotion || conn.saveData || slowNetwork) return;
 
-  /**
-   * Genre 3D Merry-Go-Round Carousel
-   * Smooth continuous rotation with interaction support
-   */
-  const carousel = document.getElementById('genre-carousel');
-  const prevBtn = document.querySelector('.genre-carousel-prev');
-  const nextBtn = document.querySelector('.genre-carousel-next');
+  const attach = () => {
+    const small = window.matchMedia('(max-width: 700px)').matches;
+    video.muted = true;
+    video.src = small ? video.dataset.srcSmall : video.dataset.src;
+    video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      }).observe(video);
+    } else {
+      video.play().catch(() => {});
+    }
+  };
+  if (document.readyState === 'complete') attach();
+  else window.addEventListener('load', attach, { once: true });
+}
 
-  if (carousel && prevBtn && nextBtn) {
-    const items = carousel.querySelectorAll('.genre-carousel-item');
-    const numItems = items.length;
-    const angleStep = 360 / numItems;
-    const radius = 280;
+function initMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const opener = document.querySelector('.nav-hamburger');
+  if (!menu || !opener) return;
 
-    // Continuous rotation state
-    let currentRotation = 0;
-    let targetRotation = 0;
-    let isDragging = false;
-    let isHovering = false;
-    let dragStartX = 0;
-    let dragStartRotation = 0;
-
-    // Position each item at its fixed angle
-    const initializePositions = () => {
-      items.forEach((item, i) => {
-        item.dataset.angle = angleStep * i;
-      });
-    };
-
-    // Render carousel at given rotation angle
-    const renderCarousel = (rotation) => {
-      items.forEach((item) => {
-        const baseAngle = parseFloat(item.dataset.angle);
-        const displayAngle = (baseAngle + rotation) * (Math.PI / 180);
-
-        const x = Math.sin(displayAngle) * radius;
-        const z = Math.cos(displayAngle) * radius - radius;
-        const scale = (z + radius * 2) / (radius * 2) * 0.4 + 0.6;
-        const opacity = (z + radius * 2) / (radius * 2) * 0.6 + 0.4;
-
-        item.style.transform = `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
-        item.style.opacity = opacity;
-        item.style.zIndex = Math.round((z + radius) * 10);
-      });
-    };
-
-    // Animation loop for smooth continuous rotation
-    const animate = () => {
-      if (!isDragging && !isHovering) {
-        // Slow continuous rotation
-        currentRotation += 0.15;
-        targetRotation = currentRotation;
-      } else if (!isDragging && isHovering) {
-        // Smooth lerp to target when hovering but not dragging
-        currentRotation += (targetRotation - currentRotation) * 0.1;
-      }
-
-      renderCarousel(currentRotation);
-      requestAnimationFrame(animate);
-    };
-
-    // Jump to next/prev item with smooth animation
-    const jumpToNext = (direction) => {
-      // Snap target to nearest item position, then move one step
-      const snapped = Math.round(currentRotation / angleStep) * angleStep;
-      targetRotation = snapped + (direction * angleStep);
-      currentRotation = targetRotation; // Instant jump for button clicks
-    };
-
-    // Button controls - jump one tile
-    prevBtn.addEventListener('click', () => jumpToNext(1));
-    nextBtn.addEventListener('click', () => jumpToNext(-1));
-
-    // Keyboard controls
-    carousel.setAttribute('tabindex', '0');
-    carousel.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') jumpToNext(1);
-      if (e.key === 'ArrowRight') jumpToNext(-1);
-    });
-
-    // Mouse drag - smooth continuous
-    carousel.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      dragStartX = e.clientX;
-      dragStartRotation = currentRotation;
-      carousel.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      const diff = e.clientX - dragStartX;
-      currentRotation = dragStartRotation + diff * 0.3;
-      targetRotation = currentRotation;
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        carousel.style.cursor = 'grab';
-        // Snap to nearest item
-        targetRotation = Math.round(currentRotation / angleStep) * angleStep;
-      }
-    });
-
-    // Touch support - smooth continuous
-    carousel.addEventListener('touchstart', (e) => {
-      isDragging = true;
-      dragStartX = e.touches[0].clientX;
-      dragStartRotation = currentRotation;
-    }, { passive: true });
-
-    carousel.addEventListener('touchmove', (e) => {
-      if (!isDragging) return;
-      const diff = e.touches[0].clientX - dragStartX;
-      currentRotation = dragStartRotation + diff * 0.3;
-      targetRotation = currentRotation;
-    }, { passive: true });
-
-    carousel.addEventListener('touchend', () => {
-      isDragging = false;
-      targetRotation = Math.round(currentRotation / angleStep) * angleStep;
-    });
-
-    // Pause auto-rotation on hover
-    carousel.addEventListener('mouseenter', () => {
-      isHovering = true;
-    });
-
-    carousel.addEventListener('mouseleave', () => {
-      isHovering = false;
-    });
-
-    // Initialize and start animation
-    initializePositions();
-    requestAnimationFrame(animate);
+  if (typeof menu.showPopover === 'function') {
+    menu.addEventListener('toggle', e => opener.setAttribute('aria-expanded', String(e.newState === 'open')));
+    menu.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => menu.hidePopover()));
+    return;
   }
+
+  // No Popover API (iOS Safari < 17). The nav's backdrop-filter would trap a fixed child, so the menu moves to <body>.
+  document.body.appendChild(menu);
+  const setOpen = open => {
+    menu.classList.toggle('is-open', open);
+    opener.setAttribute('aria-expanded', String(open));
+    if (open) menu.querySelector('.mobile-menu-close').focus();
+  };
+  opener.addEventListener('click', () => setOpen(true));
+  menu.querySelector('.mobile-menu-close').addEventListener('click', () => { setOpen(false); opener.focus(); });
+  menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('is-open')) setOpen(false); });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadArtists();
+  initDemoForm();
+  initGrain();
+  initCursorGrain();
+  initReveal();
+  initStats();
+  initHeroVideo();
+  initMobileMenu();
 });

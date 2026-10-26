@@ -1,702 +1,390 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antler Room | Independent Digital Record Label</title>
+  <title>Antler Room | Independent Internet Record Label (mock-up)</title>
+  <meta name="description" content="Antler Room is an independent internet record label. Outsider house, ambient, UK rap, jazz house and neo-classical.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#120E0B">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23120E0B'/%3E%3Cpath d='M8 2L9.1 6.9L14 8L9.1 9.1L8 14L6.9 9.1L2 8L6.9 6.9Z' fill='%23C5A059'/%3E%3C/svg%3E">
 
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Antler Room is an independent digital record label shaping global culture. Built for digitally native audiences with a focus on TikTok, Instagram, and YouTube Shorts.">
-  <meta name="keywords" content="record label, music, digital label, independent label, TikTok music, Instagram music, music distribution, artist development, demo submission">
-  <meta name="author" content="Antler Room">
-  <meta name="robots" content="index, follow">
+  <link rel="preload" href="data/artists.json" as="fetch" crossorigin>
+  <!-- Lead roster card (first artist after sorting artists.json) is the largest paint on most screens; keep in step with SIZES.rosterFeature in mockup.js. -->
+  <link rel="preload" as="image" href="media/artists/lovi-640.webp" imagesrcset="media/artists/lovi-320.webp 320w, media/artists/lovi-640.webp 640w" imagesizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1200px) calc(50vw - 40px), 548px" fetchpriority="high">
 
-  <!-- Open Graph / Social Media -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://antlerroom.co.uk/">
-  <meta property="og:title" content="Antler Room | Independent Digital Record Label">
-  <meta property="og:description" content="Independent digital record label shaping global culture. Built for digitally native audiences.">
-  <meta property="og:image" content="https://antlerroom.co.uk/media/og-image.jpg">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://antlerroom.co.uk/">
-  <meta name="twitter:title" content="Antler Room | Independent Digital Record Label">
-  <meta name="twitter:description" content="Independent digital record label shaping global culture. Built for digitally native audiences.">
-  <meta name="twitter:image" content="https://antlerroom.co.uk/media/og-image.jpg">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://antlerroom.co.uk/">
-
-  <!-- Google Fonts preconnect -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
+  <script>document.documentElement.classList.replace('no-js', 'js');</script>
 </head>
 <body>
-  <!-- ========== PASSWORD GATE ========== -->
-  <style id="ar-gate-style">
-    html.ar-locked, html.ar-locked body { overflow: hidden !important; height: 100vh !important; touch-action: none; }
-    html.ar-locked .nav,
-    html.ar-locked .mobile-menu,
-    html.ar-locked .hero .cta-button,
-    html.ar-locked .hero-content a[href^="#"],
-    html.ar-locked .nav-cta,
-    html.ar-locked .nav-hamburger { display: none !important; visibility: hidden !important; pointer-events: none !important; }
-    html.ar-locked main,
-    html.ar-locked footer,
-    html.ar-locked .section-divider,
-    html.ar-locked .grain-overlay { pointer-events: none !important; }
-    #ar-gate-overlay {
-      position: fixed; inset: 0; z-index: 99999; pointer-events: none;
-      display: flex; align-items: flex-end; justify-content: center;
-      padding: 0 24px 48px;
-    }
-    #ar-gate-form {
-      pointer-events: auto;
-      background: rgba(13,13,13,0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(201,169,110,0.45);
-      padding: 18px 22px; border-radius: 4px;
-      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
-      box-shadow: 0 10px 50px rgba(0,0,0,0.7);
-      max-width: 92vw;
-    }
-    #ar-gate-label {
-      color: #C5A059;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.72rem; letter-spacing: 0.18em;
-      text-transform: uppercase; font-weight: 600;
-      white-space: nowrap;
-    }
-    #ar-gate-input {
-      background: transparent; border: none;
-      border-bottom: 1px solid rgba(201,169,110,0.5);
-      color: #fff; padding: 6px 8px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.95rem; letter-spacing: 0.2em;
-      outline: none; width: 150px;
-    }
-    #ar-gate-input:focus { border-bottom-color: #C5A059; }
-    #ar-gate-submit {
-      background: #C5A059; color: #0D0D0D;
-      border: none; padding: 9px 16px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      cursor: pointer; border-radius: 2px;
-    }
-    #ar-gate-submit:hover { background: #D4BA85; }
-    #ar-gate-error { color: #E74C3C; font-size: 0.68rem; letter-spacing: 0.12em; display: none; text-transform: uppercase; }
-    #ar-gate-error.show { display: inline; }
-    @media (max-width: 480px) {
-      #ar-gate-overlay { padding: 0 14px 24px; }
-      #ar-gate-form { padding: 14px 16px; gap: 10px; }
-      #ar-gate-input { width: 100%; }
-      #ar-gate-submit { width: 100%; }
-    }
-  </style>
-  <script>
-    (function(){
-      var KEY = 'ar_unlocked_v1';
-      var locked = sessionStorage.getItem(KEY) !== '1';
-      if (!locked) return;
-      document.documentElement.classList.add('ar-locked');
+  <svg width="0" height="0" class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="gold-fade" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%" stop-color="#C5A059" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#C5A059" stop-opacity="0"/>
+      </linearGradient>
+      <symbol id="sunburst" viewBox="0 0 200 100">
+        <g transform="translate(100, 100)" stroke="url(#gold-fade)" stroke-width="1">
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(-90)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(-75)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(-60)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(-45)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(-30)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(-15)"/>
+          <line x1="0" y1="0" x2="0" y2="-100"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(15)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(30)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(45)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(60)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(75)"/>
+          <line x1="0" y1="0" x2="0" y2="-100" transform="rotate(90)"/>
+        </g>
+      </symbol>
+      <symbol id="sparkle" viewBox="0 0 16 16">
+        <path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="currentColor"/>
+      </symbol>
+      <symbol id="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="icon-youtube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor" stroke="none"/></symbol>
+    </defs>
+  </svg>
 
-      var SCROLL_KEYS = { 32:1, 33:1, 34:1, 35:1, 36:1, 37:1, 38:1, 39:1, 40:1 };
-
-      function isGateField(t){
-        return t && (t.id === 'ar-gate-input' || t.id === 'ar-gate-submit' || (t.closest && t.closest('#ar-gate-form')));
-      }
-      function swallowClick(e){
-        if (!locked) return;
-        var t = e.target;
-        if (isGateField(t)) return;
-        var a = t.closest ? t.closest('a') : null;
-        if (a) {
-          var href = a.getAttribute('href') || '';
-          if (href.charAt(0) === '#' || href === '' || a.hash) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {}
-            var input = document.getElementById('ar-gate-input');
-            if (input) input.focus();
-          }
-        }
-      }
-      function swallowKey(e){
-        if (!locked) return;
-        if (isGateField(e.target)) return;
-        if (SCROLL_KEYS[e.keyCode]) { e.preventDefault(); }
-      }
-      function swallowWheel(e){ if (locked) e.preventDefault(); }
-
-      document.addEventListener('click', swallowClick, true);
-      document.addEventListener('keydown', swallowKey, true);
-      document.addEventListener('wheel', swallowWheel, { passive: false, capture: true });
-      document.addEventListener('touchmove', swallowWheel, { passive: false, capture: true });
-      window.addEventListener('hashchange', function(){
-        if (!locked) return;
-        try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {}
-        window.scrollTo(0, 0);
-      });
-      window.addEventListener('scroll', function(){ if (locked) window.scrollTo(0, 0); }, { passive: true });
-
-      function init() {
-        if (sessionStorage.getItem(KEY) === '1') {
-          locked = false;
-          document.documentElement.classList.remove('ar-locked');
-          return;
-        }
-        var overlay = document.createElement('div');
-        overlay.id = 'ar-gate-overlay';
-        overlay.innerHTML =
-          '<form id="ar-gate-form" autocomplete="off">' +
-            '<label id="ar-gate-label" for="ar-gate-input">Enter Password</label>' +
-            '<input id="ar-gate-input" type="password" autocomplete="off" spellcheck="false" aria-label="Password" />' +
-            '<button id="ar-gate-submit" type="submit">Unlock</button>' +
-            '<span id="ar-gate-error">Incorrect</span>' +
-          '</form>';
-        document.body.appendChild(overlay);
-        var form = overlay.querySelector('#ar-gate-form');
-        var input = overlay.querySelector('#ar-gate-input');
-        var err = overlay.querySelector('#ar-gate-error');
-        form.addEventListener('submit', function(e){
-          e.preventDefault();
-          if (input.value === 'AR2026') {
-            sessionStorage.setItem(KEY, '1');
-            locked = false;
-            document.documentElement.classList.remove('ar-locked');
-            overlay.remove();
-          } else {
-            err.classList.add('show');
-            input.value = '';
-            input.focus();
-          }
-        });
-        input.addEventListener('input', function(){ err.classList.remove('show'); });
-      }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
-    })();
-  </script>
-
-  <nav class="nav">
-    <div class="nav-container">
-      <a href="#" class="logo">
+  <!-- 1. Header + short hero -->
+  <nav class="nav" aria-label="Main">
+    <div class="nav-inner">
+      <a href="#top" class="logo" aria-label="Antler Room, back to top">
         <span class="logo-antler">ANTLER</span>
         <span class="logo-room">Room</span>
       </a>
 
-      <button
-        class="nav-hamburger"
-        popovertarget="mobile-menu"
-        aria-label="Open navigation menu"
-      >
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
-
-      <ul class="nav-links nav-links--desktop">
-        <li><a href="#success">SUCCESS</a></li>
-        <li><a href="#strategy">STRATEGY</a></li>
-        <li><a href="#services">SERVICES</a></li>
-        <li><a href="#team">TEAM</a></li>
-        <li><a href="#genres">GENRES</a></li>
-        <li><a href="#contact">CONTACT</a></li>
+      <ul class="nav-links">
+        <li><a href="#artists">Artists</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#track-record">Track record</a></li>
       </ul>
 
-      <a href="#submit-demos" class="nav-cta nav-cta--desktop">SUBMIT DEMOS</a>
+      <ul class="socials socials--nav">
+        <li><a href="https://www.instagram.com/antlerroom/" target="_blank" rel="noopener" aria-label="Antler Room on Instagram"><svg aria-hidden="true"><use href="#icon-instagram"/></svg></a></li>
+        <li><a href="https://www.youtube.com/@AntlerRoom" target="_blank" rel="noopener" aria-label="Antler Room on YouTube"><svg aria-hidden="true"><use href="#icon-youtube"/></svg></a></li>
+      </ul>
+
+      <a href="#demo" class="btn btn--gold btn--small nav-cta">Send a demo</a>
+
+      <button type="button" class="nav-hamburger" aria-controls="mobile-menu" aria-expanded="false" popovertarget="mobile-menu" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
 
-    <nav id="mobile-menu" class="mobile-menu" popover>
-      <button
-        class="mobile-menu-close"
-        popovertarget="mobile-menu"
-        popovertargetaction="hide"
-        aria-label="Close navigation menu"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+    <div id="mobile-menu" class="mobile-menu" popover>
+      <button type="button" class="mobile-menu-close" popovertarget="mobile-menu" popovertargetaction="hide" aria-label="Close menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
       <ul class="mobile-menu-links">
-        <li><a href="#success">SUCCESS</a></li>
-        <li><a href="#strategy">STRATEGY</a></li>
-        <li><a href="#services">SERVICES</a></li>
-        <li><a href="#team">TEAM</a></li>
-        <li><a href="#genres">GENRES</a></li>
-        <li><a href="#contact">CONTACT</a></li>
+        <li><a href="#artists">Artists</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#track-record">Track record</a></li>
+        <li><a href="#promote">How we promote</a></li>
+        <li><a href="#genres">Our lanes</a></li>
       </ul>
-      <a href="#submit-demos" class="cta-button mobile-menu-cta">SUBMIT DEMOS</a>
-    </nav>
+      <ul class="socials socials--menu">
+        <li><a href="https://www.instagram.com/antlerroom/" target="_blank" rel="noopener" aria-label="Antler Room on Instagram"><svg aria-hidden="true"><use href="#icon-instagram"/></svg></a></li>
+        <li><a href="https://www.youtube.com/@AntlerRoom" target="_blank" rel="noopener" aria-label="Antler Room on YouTube"><svg aria-hidden="true"><use href="#icon-youtube"/></svg></a></li>
+      </ul>
+      <a href="#demo" class="btn btn--gold mobile-menu-cta">Send a demo</a>
+    </div>
   </nav>
 
-  <header class="hero" id="hero">
-    <div class="hero-video-container">
-      <video class="hero-video" autoplay muted loop playsinline>
-        <source src="media/Main Video.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-overlay"></div>
+  <header class="hero" id="top">
+    <div class="hero-media" aria-hidden="true">
+      <img class="hero-poster" src="media/hero/deer-wall-poster.webp" srcset="media/hero/deer-wall-poster-480.webp 854w, media/hero/deer-wall-poster.webp 1280w" sizes="100vw" width="1280" height="720" alt="" fetchpriority="high">
+      <!-- Sources are attached by mockup.js after the page has loaded, so the video never competes with first paint. -->
+      <video class="hero-video" muted loop playsinline preload="none" data-src="media/hero/deer-wall-720.mp4" data-src-small="media/hero/deer-wall-480.mp4"></video>
+      <div class="hero-overlay"></div>
     </div>
     <div class="hero-content">
       <h1 class="hero-title">
         <span class="hero-title-antler">ANTLER</span>
         <span class="hero-title-room">Room</span>
       </h1>
-      <p class="hero-subtitle">INDEPENDENT DIGITAL RECORD LABEL SHAPING GLOBAL CULTURE</p>
-      <p class="hero-tagline">BUILT FOR DIGITALLY NATIVE AUDIENCES</p>
-      <a href="#submit-demos" class="cta-button">SUBMIT YOUR DEMO</a>
+      <p class="hero-line">Independent Internet Record Label</p>
     </div>
   </header>
 
-  <div class="section-divider" aria-hidden="true">
-    <svg class="sunburst" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="gold-fade-1" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#C5A059" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="#C5A059" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <g transform="translate(100, 100)">
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(0)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(15)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(30)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(45)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(60)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(75)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(90)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(105)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(120)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(135)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(150)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(165)"/>
-        <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-1)" stroke-width="1" transform="rotate(180)"/>
-      </g>
-    </svg>
-  </div>
-
   <main>
-    <!-- Placeholder sections for smooth scroll targets -->
-    <section id="success" class="section section--stats">
+    <!-- 2. Antler Room artists -->
+    <section id="artists" class="section section--roster" aria-labelledby="artists-title">
       <div class="container">
-        <div class="stats-showcase">
-          <h2 class="stats-headline">
-            <span class="stats-headline-top">We Engineer</span>
-            <span class="stats-headline-accent">Global Phenomenons</span>
-          </h2>
-
-          <div class="stats-row">
-            <div class="stat-item stat-item--expandable">
-              <span class="stat-number">
-                <span class="stat-short">10B+</span>
-                <span class="stat-full">10,000,000,000+</span>
-              </span>
-              <span class="stat-label">Streams</span>
-            </div>
-            <div class="stat-item stat-item--expandable">
-              <span class="stat-number">
-                <span class="stat-short">1T+</span>
-                <span class="stat-full">1,000,000,000,000+</span>
-              </span>
-              <span class="stat-label">Social Views</span>
-            </div>
-          </div>
-
-          <p class="stats-inquiry">SPECIFIC CAMPAIGN DATA AVAILABLE UPON INQUIRY</p>
-          <a href="#contact" class="cta-button cta-button--prominent">INQUIRE FOR DETAILS</a>
+        <header class="section-head">
+          <p class="eyebrow">The roster</p>
+          <h2 id="artists-title" class="section-title">Antler Room <span class="serif-accent">artists</span></h2>
+        </header>
+        <div class="roster-grid" id="roster-grid" aria-live="polite">
+          <p class="data-status">Loading artists&hellip;</p>
         </div>
       </div>
     </section>
 
-    <section id="strategy" class="section">
+    <div class="section-divider" aria-hidden="true"><svg class="sunburst"><use href="#sunburst"/></svg></div>
+
+    <!-- 3. Team -->
+    <section id="team" class="section section--team" aria-labelledby="team-title">
       <div class="container">
-        <header class="section-header-group">
-          <h2 class="section-header">HOW WE WORK</h2>
+        <header class="section-head">
+          <p class="eyebrow">Who we are</p>
+          <h2 id="team-title" class="section-title">The <span class="serif-accent">team</span></h2>
         </header>
-
-        <div class="strategy-grid">
-          <article class="strategy-pillar">
-            <h3 class="pillar-title">SOCIALS FIRST</h3>
-            <p class="pillar-description">TikTok, Instagram, YouTube Shorts. Modern music discovery is our focus.</p>
-          </article>
-          <article class="strategy-pillar">
-            <h3 class="pillar-title">WE DO IT OURSELVES</h3>
-            <p class="pillar-description">We build our own tools and run our own campaigns. No agencies, no middlemen. This means your tracks move faster and nothing gets lost in translation.</p>
-          </article>
-          <article class="strategy-pillar">
-            <h3 class="pillar-title">100M VIEW TARGET</h3>
-            <p class="pillar-description">That's roughly when things actually start happening. Syncs, brand deals, proper momentum. Everything we do is aimed at getting there as a baseline.</p>
-          </article>
-          <article class="strategy-pillar">
-            <h3 class="pillar-title">WE MOVE FAST</h3>
-            <p class="pillar-description">When we see a trend or opportunity, we're on it in hours. No approval chains. We work with you side by side.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <div class="section-divider" aria-hidden="true">
-      <svg class="sunburst" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="gold-fade-2" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stop-color="#C5A059" stop-opacity="0.8"/>
-            <stop offset="100%" stop-color="#C5A059" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <g transform="translate(100, 100)">
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(0)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(15)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(30)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(45)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(60)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(75)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(90)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(105)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(120)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(135)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(150)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(165)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-2)" stroke-width="1" transform="rotate(180)"/>
-        </g>
-      </svg>
-    </div>
-
-    <section id="services" class="section">
-      <div class="container">
-        <header class="section-header-group">
-          <h2 class="section-header">WHAT WE DO</h2>
-        </header>
-
-        <div class="services-grid">
-          <article class="service-card">
-            <h3 class="service-title">SOCIAL CAMPAIGNS</h3>
-            <p class="service-description">We make content that works on short-form platforms and we know how to get it seen. The goal is always turning views into fans.</p>
-          </article>
-          <article class="service-card">
-            <h3 class="service-title">DISTRIBUTION</h3>
-            <p class="service-description">We get your music on all the platforms and pitch it to the right playlists.</p>
-          </article>
-          <article class="service-card">
-            <h3 class="service-title">PERSONAL SUPPORT</h3>
-            <p class="service-description">You can talk to us directly. We're not a big machine where you never know who's handling your stuff. We work by honest feedback and proper planning.</p>
-          </article>
-          <article class="service-card">
-            <h3 class="service-title">REAL SUCCESS</h3>
-            <p class="service-description">Our track record for generating streams and other opportunities speaks for itself.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="team" class="section">
-      <div class="container">
-        <header class="section-header-group">
-          <h2 class="section-header">OUR TEAM</h2>
-          <p class="section-subheader">Two decades of combined music industry experience. From major label campaigns to independent breakthroughs, we've built careers from the ground up.</p>
-        </header>
-
         <div class="team-grid">
-          <article class="team-card">
-            <div class="team-card-photo">
-              <img src="media/Vova.png" alt="Vova - Co-Founder" loading="lazy">
+          <a class="artist-card team-card fade-in" href="https://joeyschoen.com" target="_blank" rel="noopener">
+            <div class="artist-art team-art">
+              <img src="media/team/joey.webp" alt="Joey" width="505" height="400" loading="lazy" decoding="async">
+              <span class="pill genre-tag"><svg aria-hidden="true"><use href="#sparkle"/></svg>Co-founder &middot; A&amp;R &amp; Operations</span>
+              <span class="spotify-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
             </div>
-            <header class="team-card-header">
-              <h3 class="team-card-name">VOVA</h3>
-              <p class="team-card-role">CO-FOUNDER | MARKETING & TECHNOLOGY</p>
-            </header>
-            <div class="team-card-bio">
-              <p>Former Head of Marketing at Kurate Music, Vova led a world-class team driving creator-powered campaigns for leading electronic, alternative, pop, and rap artists. His work generated 10B+ streams, 1T+ social views, and placed dozens of records on Spotify Global Viral, TikTok Viral, and Billboard charts.</p>
-              <p>With 7+ years of influencer marketing experience, Vova pioneered techniques now widely adopted in modern social music marketing.</p>
+            <div class="artist-meta">
+              <h3 class="artist-name">Joey</h3>
+              <p class="artist-highlight">Currently Head of A&amp;R at NCS</p>
+              <p class="team-bio">Previously Head of A&amp;R and Label Management at Kurate Music, where Joey developed and managed world-leading ambient artists including Øneheart and .diedlonely, opened collaborations with Moby, and signed acts such as Andrea Vanzo and Cult Member.</p>
             </div>
-          </article>
-          <article class="team-card">
-            <div class="team-card-photo">
-              <img src="media/Joey.png" alt="Joey - Co-Founder" loading="lazy">
+          </a>
+          <article class="artist-card team-card fade-in">
+            <div class="artist-art team-art">
+              <img src="media/team/vova.webp" srcset="media/team/vova-640.webp 640w, media/team/vova.webp 960w" sizes="(max-width: 700px) calc(100vw - 40px), 466px" alt="Vova" class="team-photo--vova" width="960" height="762" loading="lazy" decoding="async">
+              <span class="pill genre-tag"><svg aria-hidden="true"><use href="#sparkle"/></svg>Co-founder &middot; Marketing &amp; Technology</span>
             </div>
-            <header class="team-card-header">
-              <h3 class="team-card-name">JOEY</h3>
-              <p class="team-card-role">CO-FOUNDER | A&R & OPERATIONS</p>
-            </header>
-            <div class="team-card-bio">
-              <p>Former Head of A&R and Label Management at Kurate Music, Joey developed and managed world leading ambient artists, including Øneheart and .diedlonely, and opened major collaborations with Moby and other high profile artists. He signed rising acts such as Andrea Vanzo and Cult Member across the ambient, electronic, and neoclassical spaces.</p>
-              <p>Well-connected throughout the industry and experienced in label strategy, artist development, sync, and operations, Joey brings a broad skillset focusing on building artists from the ground up.</p>
+            <div class="artist-meta">
+              <h3 class="artist-name">Vova</h3>
+              <p class="team-bio">Former Head of Marketing at Kurate Music. Vova led creator-powered campaigns for electronic, alternative, pop and rap artists, generating 10B+ streams, 1T+ social views and dozens of Spotify Global Viral, TikTok Viral and Billboard chart placements.</p>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="genres" class="section">
+    <!-- 4. Stats -->
+    <section id="stats" class="section section--stats" aria-label="Team track record in numbers">
       <div class="container">
-        <header class="section-header-group">
-          <h2 class="section-header">GENRES</h2>
-          <p class="section-subheader">We work across a lot of them. Ambient, electronic, indie, pop, rap. We're not genre snobs but we do understand what makes each of these work.</p>
-        </header>
-
-        <div class="genre-carousel-container">
-          <div class="genre-carousel" id="genre-carousel">
-            <div class="genre-carousel-item" data-index="0">
-              <span class="genre-carousel-text">UK RAP</span>
-            </div>
-            <div class="genre-carousel-item" data-index="1">
-              <span class="genre-carousel-text">ALTERNATIVE</span>
-            </div>
-            <div class="genre-carousel-item" data-index="2">
-              <span class="genre-carousel-text">ELECTRONIC</span>
-            </div>
-            <div class="genre-carousel-item" data-index="3">
-              <span class="genre-carousel-text">AMBIENT</span>
-            </div>
-            <div class="genre-carousel-item" data-index="4">
-              <span class="genre-carousel-text">NEOCLASSICAL</span>
-            </div>
-            <div class="genre-carousel-item" data-index="5">
-              <span class="genre-carousel-text">POP</span>
-            </div>
-          </div>
-          <div class="genre-carousel-controls">
-            <button class="genre-carousel-btn genre-carousel-prev" aria-label="Previous genre">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
+        <div class="stats-row">
+          <div class="stat" data-stat="streams">
+            <button class="stat-toggle" type="button" aria-expanded="false" aria-controls="stat-streams-back">
+              <span class="visually-hidden">10B+ streams: show the biggest records</span>
             </button>
-            <button class="genre-carousel-btn genre-carousel-next" aria-label="Next genre">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
+            <div class="stat-face stat-front">
+              <span class="stat-number" data-count-to="10" data-suffix="B+">10B+</span>
+              <span class="stat-label">Streams</span>
+              <span class="stat-full">10,000,000,000+</span>
+              <span class="stat-hint" aria-hidden="true">See the records</span>
+            </div>
+            <div class="stat-face stat-back" id="stat-streams-back"></div>
+          </div>
+          <div class="stat" data-stat="social_views">
+            <button class="stat-toggle" type="button" aria-expanded="false" aria-controls="stat-social-back">
+              <span class="visually-hidden">1T+ social views: show the biggest campaigns</span>
             </button>
+            <div class="stat-face stat-front">
+              <span class="stat-number stat-number--reveal">1T+</span>
+              <span class="stat-label">Social views</span>
+              <span class="stat-full">1,000,000,000,000+</span>
+              <span class="stat-hint" aria-hidden="true">See the campaigns</span>
+            </div>
+            <div class="stat-face stat-back" id="stat-social-back"></div>
+          </div>
+        </div>
+        <p class="stats-note">Across the campaigns our team has run.</p>
+      </div>
+    </section>
+
+    <!-- 5. Artists our team have worked with (previously_worked_with, never mixed with the roster) -->
+    <section id="track-record" class="section section--track" aria-labelledby="track-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Track record</p>
+          <h2 id="track-title" class="section-title">Artists our team <span class="serif-accent">have worked with</span></h2>
+        </header>
+
+        <div class="roster-grid worked-grid" id="worked-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"><svg class="sunburst"><use href="#sunburst"/></svg></div>
+
+    <!-- 6. How we promote your music -->
+    <section id="promote" class="section section--promote" aria-labelledby="promote-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Marketing</p>
+          <h2 id="promote-title" class="section-title">How we promote <span class="serif-accent">your music</span></h2>
+        </header>
+        <div class="promote-layout fade-in">
+          <div class="promote-copy">
+            <p class="promote-lead">TikTok is the world&rsquo;s leading music discovery engine and the heart of what we do. We make the content in-house, engineer the trends and put your music in front of the right audience from day one.</p>
+            <ul class="diamond-list">
+              <li>Campaigns built for scale across TikTok, Reels and Shorts</li>
+              <li>In-house content and a UGC strategy built around your sound</li>
+              <li>Pre-release seeding to test content before launch day</li>
+              <li>Dozens of in-house pages and a ready-to-go influencer network</li>
+              <li>Real-time optimisation as trends shift, with direct access to us</li>
+            </ul>
+          </div>
+          <div class="orbit" aria-hidden="true">
+            <div class="orbit-ring"><span class="orbit-trail"></span></div>
+            <span class="orbit-center">your sound</span>
+            <span class="pill orbit-item"><svg><use href="#sparkle"/></svg>TikTok</span>
+            <span class="pill orbit-item"><svg><use href="#sparkle"/></svg>Instagram</span>
+            <span class="pill orbit-item"><svg><use href="#sparkle"/></svg>YouTube</span>
+            <span class="pill orbit-item"><svg><use href="#sparkle"/></svg>Playlists</span>
+            <span class="pill orbit-item"><svg><use href="#sparkle"/></svg>Shorts</span>
           </div>
         </div>
       </div>
     </section>
 
-    <div class="section-divider" aria-hidden="true">
-      <svg class="sunburst" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="gold-fade-3" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stop-color="#C5A059" stop-opacity="0.8"/>
-            <stop offset="100%" stop-color="#C5A059" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <g transform="translate(100, 100)">
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(0)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(15)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(30)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(45)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(60)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(75)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(90)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(105)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(120)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(135)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(150)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(165)"/>
-          <line x1="0" y1="0" x2="0" y2="-100" stroke="url(#gold-fade-3)" stroke-width="1" transform="rotate(180)"/>
-        </g>
-      </svg>
-    </div>
-
-    <section id="partners" class="section">
+    <!-- 7. Deal philosophy -->
+    <section id="deal" class="section section--deal" aria-labelledby="deal-title">
       <div class="container">
-        <header class="section-header-group">
-          <h2 class="section-header">OUR PARTNERS</h2>
-          <p class="section-subheader">We work with a few key partners who handle distribution and publishing. This means you get all the best opportunities at this moment.</p>
+        <header class="section-head">
+          <p class="eyebrow" id="deal-title">Deal philosophy</p>
         </header>
+        <p class="deal-statement fade-in">
+          <span>Artist-first splits.</span>
+          <span>Better contracts.</span>
+          <span>Record by record.</span>
+        </p>
+      </div>
+    </section>
 
-        <div class="partners-grid">
-          <article class="partner-card">
-            <div class="partner-logo">
-              <img src="media/SoundOn.png" alt="SoundOn logo" loading="lazy">
-            </div>
-            <h3 class="partner-name">SOUNDON</h3>
-            <p class="partner-description">Distribution</p>
-            <p class="partner-detail">TikTok's own distribution platform, offering fantastic promo support.</p>
+    <div class="section-divider" aria-hidden="true"><svg class="sunburst"><use href="#sunburst"/></svg></div>
+
+    <!-- 8. Lanes (roster artwork per lane, rendered from artists.json) -->
+    <section id="genres" class="section section--genres" aria-labelledby="genres-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">What we sign</p>
+          <h2 id="genres-title" class="section-title">Our <span class="serif-accent">lanes</span></h2>
+        </header>
+        <div class="lane-grid" id="lane-grid"></div>
+      </div>
+    </section>
+
+    <!-- 9. Partners -->
+    <section id="partners" class="section section--partners" aria-labelledby="partners-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Who we work with</p>
+          <h2 id="partners-title" class="section-title">Our <span class="serif-accent">partners</span></h2>
+        </header>
+        <div class="partners-row">
+          <article class="partner-card fade-in">
+            <h3 class="partner-logo partner-logo--downtown"><img src="media/partners/downtown.webp" alt="Downtown" width="640" height="458" loading="lazy" decoding="async"></h3>
+            <span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>Distribution</span>
+            <p class="partner-desc">Full distribution through Downtown Artist &amp; Label Services. Reliable infrastructure that gets every release everywhere, on time.</p>
           </article>
-          <article class="partner-card">
-            <div class="partner-logo">
-              <img src="media/Downtown.png" alt="Downtown logo" loading="lazy">
-            </div>
-            <h3 class="partner-name">DOWNTOWN</h3>
-            <p class="partner-description">Distribution</p>
-            <p class="partner-detail">Full distribution through Downtown. Reliable infrastructure that actually works.</p>
+          <article class="partner-card fade-in">
+            <h3 class="partner-logo partner-logo--soundon"><img src="media/partners/soundon.webp" alt="SoundOn" width="225" height="225" loading="lazy" decoding="async"></h3>
+            <span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>Distribution &middot; TikTok</span>
+            <p class="partner-desc">TikTok&rsquo;s own distribution platform, with promo support built in and a direct line to TikTok and CapCut.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="contact" class="section">
-      <div class="container">
-        <header class="section-header-group">
-          <h2 class="section-header">CONTACT US</h2>
-          <p class="section-subheader">Got questions or want to work with us? Just get in touch.</p>
+    <div class="section-divider" aria-hidden="true"><svg class="sunburst"><use href="#sunburst"/></svg></div>
+
+    <!-- 10. Demo form -->
+    <section id="demo" class="section section--demo" aria-labelledby="demo-title">
+      <div class="container container--narrow">
+        <header class="section-head">
+          <p class="eyebrow">Submissions open</p>
+          <h2 id="demo-title" class="section-title">Send a <span class="serif-accent">demo</span></h2>
+          <p class="section-sub">Finished, mixed and mastered tracks only.</p>
         </header>
 
-        <div class="contact-email-group">
-          <div class="contact-item">
-            <h3 class="contact-role">A&R & BUSINESS ENQUIRIES</h3>
-            <a href="mailto:joey@antlerroom.co.uk" class="contact-email">joey@antlerroom.co.uk</a>
-            <p class="contact-description">Business, music, partnerships, and general enquiries</p>
-          </div>
-          <div class="contact-item">
-            <h3 class="contact-role">MARKETING</h3>
-            <a href="mailto:vova@antlerroom.co.uk" class="contact-email">vova@antlerroom.co.uk</a>
-            <p class="contact-description">Promotions, marketing, and creative direction</p>
-          </div>
+        <div class="demo-wrap">
+          <form class="demo-form" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="artist-name">Artist name *</label>
+                <input type="text" id="artist-name" name="artistName" autocomplete="name" required>
+                <span class="form-error" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="song-name">Song name *</label>
+                <input type="text" id="song-name" name="songName" required>
+                <span class="form-error" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="link">Link *</label>
+                <input type="url" id="link" name="link" inputmode="url" placeholder="https://soundcloud.com/..." aria-describedby="link-help" required>
+                <span class="form-help" id="link-help" aria-live="polite">SoundCloud links preferred.</span>
+                <span class="form-error" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+                <span class="form-error" aria-live="polite"></span>
+              </div>
+
+              <fieldset class="form-group form-group--full genre-picker">
+                <legend>Genre *</legend>
+                <div class="genre-options">
+                  <label class="genre-option"><input type="radio" name="genre" value="Outsider House" required><span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>Outsider House</span></label>
+                  <label class="genre-option"><input type="radio" name="genre" value="Ambient"><span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>Ambient</span></label>
+                  <label class="genre-option"><input type="radio" name="genre" value="UK Rap"><span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>UK Rap</span></label>
+                  <label class="genre-option"><input type="radio" name="genre" value="Jazz House"><span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>Jazz House</span></label>
+                  <label class="genre-option"><input type="radio" name="genre" value="Neo-classical"><span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>Neo-classical</span></label>
+                  <label class="genre-option"><input type="radio" name="genre" value="Other"><span class="pill"><svg aria-hidden="true"><use href="#sparkle"/></svg>Other</span></label>
+                </div>
+                <span class="form-error" aria-live="polite"></span>
+              </fieldset>
+
+              <div class="form-group form-group--full">
+                <label for="info">Info <span class="optional">(optional)</span></label>
+                <textarea id="info" name="info" rows="3" placeholder="Anything we should know: release plans, influences, socials&hellip;"></textarea>
+              </div>
+
+              <div class="form-group form-group--full rights-group">
+                <label class="check">
+                  <input type="checkbox" id="rights" name="rights" required>
+                  <span class="check-box" aria-hidden="true"></span>
+                  <span>I confirm I own this music, or have permission from everyone who does, and I have the right to release it. It contains no uncleared samples. *</span>
+                </label>
+                <span class="form-error" aria-live="polite"></span>
+              </div>
+
+              <div class="form-honeypot" aria-hidden="true">
+                <label for="website">Website</label>
+                <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--gold btn--block form-submit">Submit demo</button>
+          </form>
         </div>
-      </div>
-    </section>
-
-    <section id="submit-demos" class="section">
-      <div class="container">
-        <header class="section-header-group">
-          <h2 class="section-header">DIRECT SUBMISSION</h2>
-          <p class="section-subheader section-warning">We only accept finished, mixed, and mastered tracks. Demos, rough cuts, and works-in-progress will not be reviewed. Make sure your music is ready for release before submitting.</p>
-        </header>
-
-        <form class="demo-form" novalidate>
-          <div class="form-group">
-            <label for="artist-name">Artist Name *</label>
-            <input type="text" id="artist-name" name="artist-name" required>
-            <span class="form-error" aria-live="polite"></span>
-          </div>
-
-          <!-- Honeypot field - hidden from users, catches bots -->
-          <div class="form-group" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
-            <label for="website">Website</label>
-            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
-          </div>
-
-          <div class="form-group">
-            <label for="email">Contact Email *</label>
-            <input type="email" id="email" name="email" required>
-            <span class="form-error" aria-live="polite"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="release-name">Release Name *</label>
-            <input type="text" id="release-name" name="release-name" required>
-            <span class="form-error" aria-live="polite"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="release-type">Release Type *</label>
-            <select id="release-type" name="release-type" required>
-              <option value="">Select type...</option>
-              <option value="single">Single</option>
-              <option value="ep">EP</option>
-              <option value="album">Album</option>
-            </select>
-            <span class="form-error" aria-live="polite"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="listen-link">Listen Link *</label>
-            <input type="url" id="listen-link" name="listen-link" required placeholder="https://...">
-            <span class="form-error" aria-live="polite"></span>
-          </div>
-
-          <fieldset class="form-group form-group-fieldset">
-            <legend>Genre (select all that apply)</legend>
-            <div class="checkbox-group">
-              <label class="checkbox-label">
-                <input type="checkbox" name="genre" value="uk-rap">
-                <span class="checkbox-custom"></span>
-                UK Rap
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" name="genre" value="alternative">
-                <span class="checkbox-custom"></span>
-                Alternative
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" name="genre" value="electronic">
-                <span class="checkbox-custom"></span>
-                Electronic
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" name="genre" value="ambient">
-                <span class="checkbox-custom"></span>
-                Ambient
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" name="genre" value="neoclassical">
-                <span class="checkbox-custom"></span>
-                Neoclassical
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" name="genre" value="pop">
-                <span class="checkbox-custom"></span>
-                Pop
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" name="genre" value="other" id="genre-other-checkbox">
-                <span class="checkbox-custom"></span>
-                Other
-              </label>
-            </div>
-            <div class="genre-other-input" id="genre-other-container" style="display: none;">
-              <input type="text" id="genre-other" name="genre-other" placeholder="Enter your genre(s)...">
-            </div>
-          </fieldset>
-
-          <div class="form-group">
-            <label for="notes">Notes (optional)</label>
-            <textarea id="notes" name="notes" rows="4" placeholder="Tell us about your music, influences, and goals..."></textarea>
-          </div>
-
-          <button type="submit" class="cta-button form-submit">SUBMIT DEMO</button>
-        </form>
       </div>
     </section>
   </main>
 
+  <!-- 11. Footer -->
   <footer class="footer">
-    <div class="stars-container" aria-hidden="true">
-      <svg class="star star--1" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-      </svg>
-      <svg class="star star--2" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-      </svg>
-      <svg class="star star--3" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-      </svg>
-      <svg class="star star--4" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-      </svg>
-      <svg class="star star--5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-      </svg>
+    <div class="footer-stars" aria-hidden="true">
+      <svg class="twinkle twinkle--1"><use href="#sparkle"/></svg>
+      <svg class="twinkle twinkle--2"><use href="#sparkle"/></svg>
+      <svg class="twinkle twinkle--3"><use href="#sparkle"/></svg>
+      <svg class="twinkle twinkle--4"><use href="#sparkle"/></svg>
     </div>
-    <div class="container">
-      <div class="footer-content">
-        <a href="#hero" class="footer-logo">
-          <span class="logo-antler">ANTLER</span>
-          <span class="logo-room">Room</span>
-        </a>
-        <p class="footer-tagline">ENGINEERING CULTURAL PHENOMENONS</p>
-        <p class="footer-copyright">&copy; 2026 Antler Room. All rights reserved.</p>
-      </div>
+    <div class="container footer-inner">
+      <a href="#top" class="logo logo--footer" aria-label="Antler Room, back to top">
+        <span class="logo-antler">ANTLER</span>
+        <span class="logo-room">Room</span>
+      </a>
+      <ul class="socials">
+        <li><a href="https://www.instagram.com/antlerroom/" target="_blank" rel="noopener" aria-label="Antler Room on Instagram"><svg aria-hidden="true"><use href="#icon-instagram"/></svg></a></li>
+        <li><a href="https://www.youtube.com/@AntlerRoom" target="_blank" rel="noopener" aria-label="Antler Room on YouTube"><svg aria-hidden="true"><use href="#icon-youtube"/></svg></a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Antler Room. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Grain texture overlay -->
-  <div class="grain-overlay" aria-hidden="true"></div>
 
   <script src="js/main.js" defer></script>
 </body>
