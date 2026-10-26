@@ -471,8 +471,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .artist-card--feature .work-list li { font-size: 0.9rem; }
 .artist-card--feature .work-role { font-size: 1.05rem; }
 .spotify-hint { z-index: 4; }
-.has-work:hover .work-overlay, .has-work:focus-visible .work-overlay { opacity: 1; transform: none; }
-.has-work:hover .artist-art img, .has-work:focus-visible .artist-art img { filter: blur(2px); }
+.has-work:hover .work-overlay, .has-work:focus-visible .work-overlay, .has-work.is-revealed .work-overlay { opacity: 1; transform: none; }
+/* Scrolling toggles the overlay constantly on touch screens; the slide would push the last line past the card edge mid-fade. */
+@media (hover: none) and (pointer: coarse) { .work-overlay { transform: none; } }
+.has-work:hover .artist-art img, .has-work:focus-visible .artist-art img, .has-work.is-revealed .artist-art img { filter: blur(2px); }
 
 .art-placeholder {
   position: absolute;
@@ -696,11 +698,19 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .worked-grid .artist-card:not(.artist-card--feature) .artist-listeners strong { display: block; margin: 0; }
   .worked-grid .artist-card:not(.artist-card--feature) .artist-highlight { font-size: 0.66rem; }
   .worked-grid .artist-card:not(.artist-card--feature) .genre-tag { left: 8px; bottom: 8px; font-size: 0.55rem; padding: 4px 9px 4px 7px; letter-spacing: 0.1em; }
+}
+/* Small cards on the 7-column desktop grid and the phone and small-tablet grids are about the same size. */
+@media (min-width: 1200px), (max-width: 900px) {
   .worked-grid .artist-card:not(.artist-card--feature) .work-overlay { padding: 10px; gap: 5px; }
   .worked-grid .artist-card:not(.artist-card--feature) .work-list { gap: 3px; }
   .worked-grid .artist-card:not(.artist-card--feature) .work-role { font-size: 0.68rem; }
   .worked-grid .artist-card:not(.artist-card--feature) .work-list li { font-size: 0.62rem; padding-left: 10px; }
   .worked-grid .artist-card:not(.artist-card--feature) .work-list li::before { width: 4px; height: 4px; }
+}
+@media (max-width: 359px) {
+  .worked-grid .artist-card:not(.artist-card--feature) .work-overlay { padding: 8px; gap: 3px; }
+  .worked-grid .artist-card:not(.artist-card--feature) .work-list { gap: 2px; }
+  .worked-grid .artist-card:not(.artist-card--feature) .work-list li { font-size: 0.58rem; line-height: 1.25; }
 }
 @media (min-width: 701px) and (max-width: 1199px) {
   .worked-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }

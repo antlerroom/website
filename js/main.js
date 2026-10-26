@@ -104,7 +104,8 @@ function mediaCard({ href, label, image, tag, name, stat, statLabel, highlight =
   art.appendChild(image);
   if (role.length || work.length) {
     card.classList.add('has-work');
-    art.appendChild(workOverlay(role, work));
+    // Small cards have no room to repeat the highlight that already sits under the card.
+    art.appendChild(workOverlay(role, feature ? work : work.filter(item => item !== highlight)));
   }
 
   const pill = el('span', 'pill genre-tag');
@@ -199,6 +200,20 @@ function renderWorkedWith(data) {
     frag.appendChild(artistCard(artist, { feature, sizes: feature ? SIZES.workedFeature : SIZES.worked }));
   });
   grid.replaceChildren(frag);
+  observeWorkCards();
+}
+
+/* Touch screens can't hover and a tap opens Spotify, so "What we did" shows while a card crosses the middle of the screen. */
+const touchOnly = window.matchMedia('(hover: none) and (pointer: coarse)');
+let workObserver = null;
+
+function observeWorkCards() {
+  if (!touchOnly.matches || !('IntersectionObserver' in window)) return;
+  if (workObserver) workObserver.disconnect();
+  else workObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.target.classList.toggle('is-revealed', entry.isIntersecting));
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  document.querySelectorAll('.has-work').forEach(card => workObserver.observe(card));
 }
 
 /* ---------- Lanes ---------- */
