@@ -7,6 +7,7 @@
 const DATA_URL = 'data/artists.json';
 const ARTWORK_DIR = 'media/artists/';
 const DEMO_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxmDetg6t8XmPSMe3ZfWnfJfApcC-QWVOJCUyZ8WR1NMaUeuQFaaFBVjX48MmEziB1D/exec';
+const DEMO_EMAIL = 'joey@antlerroom.co.uk';
 
 const params = new URLSearchParams(location.search);
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -329,17 +330,20 @@ function initDemoForm() {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
     try {
-      // no-cors: Apps Script doesn't send CORS headers, so the response is opaque; a network failure still throws.
-      await fetch(DEMO_ENDPOINT, {
+      // A url-encoded POST is a simple request, so there's no preflight and Apps Script's JSON reply is readable.
+      const res = await fetch(DEMO_ENDPOINT, {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(payload).toString()
       });
+      const reply = res.ok ? await res.json().catch(() => null) : null;
+      if (!reply || reply.ok !== true) throw new Error(reply && reply.error ? reply.error : `Demo endpoint answered ${res.status}`);
       showSuccess(form, payload);
     } catch (err) {
       console.error('Demo submission failed', err);
-      status.textContent = 'Something went wrong sending your demo. Please check your connection and try again.';
+      const mail = el('a', null, DEMO_EMAIL);
+      mail.href = 'mailto:' + DEMO_EMAIL;
+      status.replaceChildren("We couldn't save your demo. Please try again or email it to ", mail, '.');
       status.hidden = false;
     } finally {
       submitBtn.disabled = false;

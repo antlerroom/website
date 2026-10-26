@@ -33,14 +33,18 @@ function doPost(e) {
     'Seconds on form': Number(p._timeSpent) || '',
   };
 
+  // The site only shows "Demo received" for { ok: true }; anything else keeps the form filled and offers email instead.
   const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
   try {
+    lock.waitLock(10000);
     const sheet = SpreadsheetApp.openById(RELEASES_DB_ID).getSheetByName(SHEET_NAME);
     if (!sheet) throw new Error('No "' + SHEET_NAME + '" tab in Releases_DB');
     // Columns are matched by header text, so the tab can be reordered or extended without touching this script.
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     sheet.appendRow(headers.map(h => (h in row ? row[h] : '')));
+  } catch (err) {
+    console.error(err);
+    return reply({ ok: false, error: 'Could not save the demo' });
   } finally {
     lock.releaseLock();
   }
